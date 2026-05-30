@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { decodeSquadFromUrl } from '../utils/shareSquad'
 import { formatSquadSummaryLine } from '../lib/customPlayers'
 import { formatScoreBreakdown } from '../utils/squadScore'
@@ -55,7 +56,7 @@ export function Leaderboard({ refreshKey = 0 }: LeaderboardProps) {
   }
 
   return (
-    <div className="mt-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+    <div id="leaderboard" className="mt-4 scroll-mt-24 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
       <div className="flex items-center justify-between gap-2">
         <div>
           <h3 className="text-lg font-bold text-england-navy">Community Leaderboard</h3>
@@ -64,13 +65,21 @@ export function Leaderboard({ refreshKey = 0 }: LeaderboardProps) {
             <p className="mt-1 text-xs text-slate-400">Reference: {reference.label}</p>
           )}
         </div>
-        <button
-          type="button"
-          onClick={() => void load()}
-          className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-england-navy hover:bg-slate-200"
-        >
-          Refresh
-        </button>
+        <div className="flex shrink-0 items-center gap-2">
+          <Link
+            to="/stats"
+            className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-england-navy hover:bg-slate-50"
+          >
+            Most picked →
+          </Link>
+          <button
+            type="button"
+            onClick={() => void load()}
+            className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-england-navy hover:bg-slate-200"
+          >
+            Refresh
+          </button>
+        </div>
       </div>
 
       <div className="mt-3 rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-500">

@@ -75,7 +75,7 @@ export function ShareBar({ squad, onLeaderboardSubmit }: ShareBarProps) {
           <p className="text-sm font-semibold text-england-navy">Your prediction is auto-saved</p>
           <p className="text-xs text-slate-500">
             {squad.validation.isComplete
-              ? 'Share a link, download an image, or post to the leaderboard.'
+              ? 'Copy the link for rich previews on Twitter/WhatsApp — or download a PNG. Post to the leaderboard when ready.'
               : 'Finish your 26-man squad and pick a captain to share.'}
           </p>
           {submitError && <p className="mt-1 text-xs text-rose-600">{submitError}</p>}

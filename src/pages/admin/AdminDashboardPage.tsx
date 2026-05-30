@@ -11,6 +11,7 @@ export function AdminDashboardPage() {
   const [submissionsLocked, setSubmissionsLocked] = useState(false)
   const [predictionCount, setPredictionCount] = useState(0)
   const [botCount, setBotCount] = useState(0)
+  const [contactConfigured, setContactConfigured] = useState(false)
 
   useEffect(() => {
     void (async () => {
@@ -22,6 +23,7 @@ export function AdminDashboardPage() {
       ])
       setReferenceSet(Boolean(reference))
       setSubmissionsLocked(settings.submissions_locked)
+      setContactConfigured(Boolean(settings.contact_email?.trim()))
       setPredictionCount(predictions.length)
       setBotCount(bots.length)
     })()
@@ -59,6 +61,12 @@ export function AdminDashboardPage() {
           label="QA bots"
           value={String(botCount)}
           hint="Seeded test entries"
+        />
+        <AdminStatusCard
+          label="Contact email"
+          value={contactConfigured ? 'Set' : 'Default'}
+          hint={contactConfigured ? 'Shown on legal pages' : 'Set in Site & contest settings'}
+          variant={contactConfigured ? 'success' : 'warning'}
         />
       </div>
 

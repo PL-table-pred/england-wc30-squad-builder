@@ -23,7 +23,7 @@ export function Header() {
 
   return (
     <header className="border-b border-slate-200 bg-white">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-4 sm:px-6">
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-6">
         <Link to="/" className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-england-red shadow-sm">
             <svg viewBox="0 0 32 32" className="h-6 w-6" aria-hidden="true">
@@ -37,6 +37,26 @@ export function Header() {
             <p className="text-xs text-slate-500 sm:text-sm">Squad Builder</p>
           </div>
         </Link>
+
+        <div className="ml-auto flex flex-wrap items-center gap-2">
+        <nav className="flex items-center gap-1">
+          <Link
+            to="/stats"
+            className={`rounded-lg px-3 py-2 text-sm font-semibold ${
+              location.pathname === '/stats'
+                ? 'bg-slate-100 text-england-navy'
+                : 'text-slate-600 hover:bg-slate-50 hover:text-england-navy'
+            }`}
+          >
+            Most picked
+          </Link>
+          <Link
+            to="/#leaderboard"
+            className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50 hover:text-england-navy"
+          >
+            Leaderboard
+          </Link>
+        </nav>
 
         {configured && (
           <div className="flex items-center gap-2">
@@ -81,6 +101,7 @@ export function Header() {
             )}
           </div>
         )}
+        </div>
       </div>
     </header>
   )

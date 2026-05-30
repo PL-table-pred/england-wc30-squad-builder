@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { SiteFooter } from './SiteFooter'
 
 interface AuthLayoutProps {
   title: string
@@ -8,7 +9,7 @@ interface AuthLayoutProps {
 
 export function AuthLayout({ title, subtitle, children }: AuthLayoutProps) {
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="flex min-h-screen flex-col bg-slate-50">
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-4 sm:px-6">
           <Link to="/" className="flex items-center gap-3">
@@ -33,13 +34,14 @@ export function AuthLayout({ title, subtitle, children }: AuthLayoutProps) {
         </div>
       </header>
 
-      <main className="mx-auto max-w-md px-4 py-10 sm:px-6">
+      <main className="mx-auto max-w-md flex-1 px-4 py-10 sm:px-6">
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
           <h1 className="text-2xl font-bold text-england-navy">{title}</h1>
           {subtitle && <p className="mt-2 text-sm text-slate-500">{subtitle}</p>}
           <div className="mt-6">{children}</div>
         </div>
       </main>
+      <SiteFooter />
     </div>
   )
 }

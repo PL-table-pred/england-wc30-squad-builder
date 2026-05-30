@@ -12,6 +12,10 @@ import { AdminReferencePage } from './pages/admin/AdminReferencePage'
 import { AdminSettingsPage } from './pages/admin/AdminSettingsPage'
 import { AdminSubmissionsPage } from './pages/admin/AdminSubmissionsPage'
 import { AdminUsersPage } from './pages/admin/AdminUsersPage'
+import { MostPickedPage } from './pages/MostPickedPage'
+import { AboutPage } from './pages/AboutPage'
+import { ContactPage } from './pages/ContactPage'
+import { PrivacyPage } from './pages/PrivacyPage'
 
 function AppRoutes() {
   const location = useLocation()
@@ -32,6 +36,10 @@ function AppRoutes() {
         <Route path="/auth/callback" element={<AuthCallbackPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/stats" element={<MostPickedPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/contact" element={<ContactPage />} />
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboardPage />} />
           <Route path="reference" element={<AdminReferencePage />} />

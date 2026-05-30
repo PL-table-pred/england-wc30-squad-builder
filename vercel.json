@@ -2,5 +2,18 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "framework": "vite",
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "rewrites": [
+    {
+      "source": "/((?!api/).*)",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(bot|crawler|spider|facebook|twitter|whatsapp|telegram|slack|discord|linkedin|embedly|pinterest|googlebot|bingpreview|facebot|ia_archiver).*"
+        }
+      ],
+      "destination": "/api/share-preview"
+    },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }

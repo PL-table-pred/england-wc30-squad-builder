@@ -15,8 +15,8 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
   {
     id: 'settings',
     href: '/admin/settings',
-    title: 'Contest settings',
-    description: 'Lock or unlock community squad submissions.',
+    title: 'Site & contest settings',
+    description: 'Contact email for legal pages, lock or unlock submissions.',
   },
   {
     id: 'bots',

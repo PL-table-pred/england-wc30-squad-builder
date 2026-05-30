@@ -14,6 +14,7 @@ export interface AdminProfileRow {
 
 export interface ContestSettings {
   submissions_locked: boolean
+  contact_email?: string | null
 }
 
 export async function fetchContestSettings(): Promise<ContestSettings> {
@@ -41,6 +42,27 @@ export async function setContestSettings(
 
   const { data, error } = await supabase.rpc('set_contest_settings', {
     p_submissions_locked: submissionsLocked,
+    p_admin_secret: adminSecret ?? (getStoredAdminSecret() || null),
+  })
+
+  if (error) {
+    return { ok: false, error: error.message }
+  }
+
+  return { ok: true, settings: data as ContestSettings }
+}
+
+export async function setContactEmail(
+  contactEmail: string,
+  adminSecret?: string,
+): Promise<{ ok: boolean; settings?: ContestSettings; error?: string }> {
+  const supabase = getSupabase()
+  if (!supabase) {
+    return { ok: false, error: 'Supabase is not configured.' }
+  }
+
+  const { data, error } = await supabase.rpc('set_contact_email', {
+    p_contact_email: contactEmail.trim(),
     p_admin_secret: adminSecret ?? (getStoredAdminSecret() || null),
   })
 
