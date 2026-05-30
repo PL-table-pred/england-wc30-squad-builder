@@ -50,6 +50,8 @@ The static output is in the `dist/` folder.
 
 **Live site:** [england-wc30-squad-builder.vercel.app](https://england-wc30-squad-builder.vercel.app)
 
+**GitHub:** [github.com/PL-table-pred/england-wc30-squad-builder](https://github.com/PL-table-pred/england-wc30-squad-builder)
+
 1. Push this repo to GitHub
 2. Import the project at [vercel.com](https://vercel.com) — or run `npx vercel deploy --prod` from the project root
 3. Add environment variables in Vercel project settings:
