@@ -1,4 +1,4 @@
-import { decodeSquadParam } from './_lib/squadMeta'
+import { decodeSquadParam } from './squadMeta'
 
 export const config = {
   runtime: 'edge',

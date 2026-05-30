@@ -43,17 +43,13 @@ export function decodeSquadParam(encoded: string): SquadShareMeta | null {
       if (row?.i && row.n) customById.set(row.i, row.n.trim())
     }
 
-    const captainLabel = payload.c
-      ? labelForId(payload.c, customById)
-      : null
+    const captainLabel = payload.c ? labelForId(payload.c, customById) : null
 
     const starterIds = Object.values(payload.xi ?? {}).filter(
       (id): id is string => typeof id === 'string' && id.length > 0,
     )
 
-    const starterLabels = starterIds
-      .slice(0, 11)
-      .map((id) => labelForId(id, customById))
+    const starterLabels = starterIds.slice(0, 11).map((id) => labelForId(id, customById))
 
     return {
       formation: payload.f,
@@ -71,4 +67,12 @@ function labelForId(id: string, customById: Map<string, string>): string {
   if (id.startsWith('custom:')) return 'Custom pick'
   const slug = id.split('-').pop() ?? id
   return slug.charAt(0).toUpperCase() + slug.slice(1)
+}
+
+export function escapeXml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
 }
