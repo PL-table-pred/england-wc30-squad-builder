@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { getPlayer, PLAYERS_BY_ID } from '../data/players'
+import { resolveSquadPlayer } from '../lib/customPlayers'
 import { decodeSquadFromUrl } from '../utils/shareSquad'
 import { diffSquads, extractShareParam } from '../utils/squadCompare'
 import { buildShareUrl } from '../utils/shareSquad'
@@ -60,7 +60,9 @@ export function SquadCompare({ squad }: SquadCompareProps) {
 
   const diff =
     stateA && stateB
-      ? diffSquads(stateA, stateB, (id) => getPlayer(id) ?? PLAYERS_BY_ID[id])
+      ? diffSquads(stateA, stateB, (id) =>
+          resolveSquadPlayer(id, { ...stateA.customPlayers, ...stateB.customPlayers }),
+        )
       : null
 
   const showBError = urlB.trim().length > 0 && !stateB

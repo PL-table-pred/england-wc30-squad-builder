@@ -25,7 +25,7 @@ export function PlayerCard({
   active,
   inSquad,
 }: PlayerCardProps) {
-  const age = getAgeIn2030(player.birthYear)
+  const age = player.isCustom ? null : getAgeIn2030(player.birthYear)
 
   return (
     <button
@@ -44,7 +44,9 @@ export function PlayerCard({
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="truncate font-semibold text-england-navy">{player.name}</p>
-          <p className="truncate text-xs text-slate-500">{player.currentClub}</p>
+          <p className="truncate text-xs text-slate-500">
+            {player.isCustom ? 'Custom name' : player.currentClub}
+          </p>
         </div>
         <span
           className={`shrink-0 rounded border px-1.5 py-0.5 text-[10px] font-bold uppercase ${POSITION_COLORS[player.position]}`}
@@ -53,7 +55,7 @@ export function PlayerCard({
         </span>
       </div>
       <div className="mt-1 flex items-center justify-between text-xs text-slate-400">
-        <span>Age in 2030: {age}</span>
+        <span>{age !== null ? `Age in 2030: ${age}` : 'Spelling must match for scoring'}</span>
         {inSquad && <span className="font-medium text-england-red">In squad</span>}
       </div>
     </button>

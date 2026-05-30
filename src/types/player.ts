@@ -26,6 +26,8 @@ export interface Player {
   subPosition: SubPosition
   birthYear: number
   currentClub: string
+  /** User-typed name not in the built-in pool. */
+  isCustom?: boolean
 }
 
 export interface PitchSlot {
@@ -39,6 +41,8 @@ export interface SquadState {
   startingXI: Record<string, string | null>
   formation: Formation
   captainId: string | null
+  /** Typed-in players keyed by id (`custom:…`). */
+  customPlayers?: Record<string, Player>
 }
 
 export interface SquadValidation {

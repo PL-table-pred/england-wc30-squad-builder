@@ -41,9 +41,15 @@ function SquadPlayerRow({
               C
             </span>
           )}
+          {player.isCustom && (
+            <span className="rounded bg-violet-100 px-1.5 py-0.5 text-[10px] font-bold uppercase text-violet-800">
+              Custom
+            </span>
+          )}
         </div>
         <p className="text-xs text-slate-400">
-          {player.subPosition} · Age {getAgeIn2030(player.birthYear)}
+          {player.subPosition}
+          {player.isCustom ? ' · spell correctly to score' : ` · Age ${getAgeIn2030(player.birthYear)}`}
         </p>
       </div>
       <button

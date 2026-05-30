@@ -11,20 +11,50 @@ An interactive website for predicting England's 26-man squad for the 2030 FIFA W
 - Auto-save to browser localStorage
 - Shareable prediction links
 - **Download PNG** — export your squad as an image for Twitter/X
-- **Community leaderboard** — post your squad and see most-viewed predictions (Supabase)
+- **Community leaderboard** — post your squad; ranked by accuracy vs an admin reference squad (Supabase)
 
-## Environment (leaderboard)
+## Leaderboard scoring
 
-Copy `.env.example` to `.env` and set your Supabase credentials:
+Each submitted prediction is scored against a single **reference squad** (set by admin):
+
+| Match | Points |
+|-------|--------|
+| Player in your starting XI and reference starting XI | 10 each |
+| Player on your bench and reference bench | 5 each |
+| Correct captain | 30 |
+
+Max score: **215** (11 starters + 15 bench + captain).
+
+## Environment (Supabase)
+
+This app uses the dedicated Supabase project **TimeCapsule England'30** (`nzypoiurjqvpohqmbide`).
+
+Copy `.env.example` to `.env`:
 
 ```
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=your-publishable-or-anon-key
+VITE_SUPABASE_URL=https://nzypoiurjqvpohqmbide.supabase.co
+VITE_SUPABASE_ANON_KEY=<from Dashboard → Settings → API>
 ```
 
-The leaderboard is optional — the app works without it. On Vercel/Netlify, add the same variables in your project settings.
+Dashboard: https://supabase.com/dashboard/project/nzypoiurjqvpohqmbide
 
-The database migration lives in `supabase/migrations/`.
+Full schema docs: [`supabase/README.md`](supabase/README.md)
+
+On Vercel, set the same two variables in project settings, then redeploy.
+
+### Admin panel
+
+1. Register at `/register`, then promote yourself in SQL:
+   ```sql
+   UPDATE public.profiles SET role = 'admin' WHERE email = 'your@email.com';
+   ```
+2. Open `/admin` (dashboard, reference squad, bots, users, settings).
+3. Build a complete squad on the homepage, then publish it under **Reference squad**.
+
+To rotate the secret:
+```sql
+UPDATE app_settings SET value = 'your-new-uuid-here' WHERE key = 'admin_secret';
+```
 
 ## Development
 

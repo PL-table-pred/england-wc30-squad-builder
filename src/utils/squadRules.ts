@@ -64,28 +64,27 @@ export function createEmptyStartingXI(formation: Formation): Record<string, stri
   )
 }
 
-export function countByPosition(players: Player[], selectedIds: string[]): Record<Position, number> {
-  const selected = players.filter((p) => selectedIds.includes(p.id))
+export function countByPosition(selectedPlayers: Player[]): Record<Position, number> {
   return {
-    GK: selected.filter((p) => p.position === 'GK').length,
-    DEF: selected.filter((p) => p.position === 'DEF').length,
-    MID: selected.filter((p) => p.position === 'MID').length,
-    FWD: selected.filter((p) => p.position === 'FWD').length,
+    GK: selectedPlayers.filter((p) => p.position === 'GK').length,
+    DEF: selectedPlayers.filter((p) => p.position === 'DEF').length,
+    MID: selectedPlayers.filter((p) => p.position === 'MID').length,
+    FWD: selectedPlayers.filter((p) => p.position === 'FWD').length,
   }
 }
 
 export function canAddPlayer(
   player: Player,
-  selectedIds: string[],
+  selectedPlayers: Player[],
 ): { allowed: boolean; reason?: string } {
-  if (selectedIds.includes(player.id)) {
+  if (selectedPlayers.some((p) => p.id === player.id)) {
     return { allowed: false, reason: 'Already in squad' }
   }
-  if (selectedIds.length >= MAX_SQUAD_SIZE) {
+  if (selectedPlayers.length >= MAX_SQUAD_SIZE) {
     return { allowed: false, reason: 'Squad is full (26/26)' }
   }
   if (player.position === 'GK') {
-    const gkCount = selectedIds.filter((id) => id.startsWith('gk-')).length
+    const gkCount = selectedPlayers.filter((p) => p.position === 'GK').length
     if (gkCount >= MAX_GOALKEEPERS) {
       return { allowed: false, reason: 'Maximum 3 goalkeepers' }
     }
@@ -94,8 +93,7 @@ export function canAddPlayer(
 }
 
 export function validateSquad(
-  players: Player[],
-  selectedIds: string[],
+  selectedPlayers: Player[],
   captainId: string | null,
 ): {
   isComplete: boolean
@@ -106,14 +104,15 @@ export function validateSquad(
   hasCaptain: boolean
   messages: string[]
 } {
-  const counts = countByPosition(players, selectedIds)
+  const selectedIds = selectedPlayers.map((p) => p.id)
+  const counts = countByPosition(selectedPlayers)
   const messages: string[] = []
 
   if (counts.GK < MIN_GOALKEEPERS) {
     messages.push(`Need ${MIN_GOALKEEPERS - counts.GK} more goalkeeper(s)`)
   }
-  if (selectedIds.length < MAX_SQUAD_SIZE) {
-    messages.push(`Select ${MAX_SQUAD_SIZE - selectedIds.length} more player(s)`)
+  if (selectedPlayers.length < MAX_SQUAD_SIZE) {
+    messages.push(`Select ${MAX_SQUAD_SIZE - selectedPlayers.length} more player(s)`)
   }
   if (!captainId) {
     messages.push('Choose a captain')
@@ -123,14 +122,14 @@ export function validateSquad(
 
   return {
     isComplete:
-      selectedIds.length === MAX_SQUAD_SIZE &&
+      selectedPlayers.length === MAX_SQUAD_SIZE &&
       counts.GK === MIN_GOALKEEPERS &&
       captainId !== null &&
       selectedIds.includes(captainId),
-    totalCount: selectedIds.length,
+    totalCount: selectedPlayers.length,
     gkCount: counts.GK,
     needsMoreGk: Math.max(0, MIN_GOALKEEPERS - counts.GK),
-    isFull: selectedIds.length >= MAX_SQUAD_SIZE,
+    isFull: selectedPlayers.length >= MAX_SQUAD_SIZE,
     hasCaptain: captainId !== null && selectedIds.includes(captainId),
     messages,
   }

@@ -1,25 +1,31 @@
 import { useCallback, useEffect, useState } from 'react'
-import { PLAYERS_BY_ID } from '../data/players'
 import { decodeSquadFromUrl } from '../utils/shareSquad'
+import { formatSquadSummaryLine } from '../lib/customPlayers'
+import { formatScoreBreakdown } from '../utils/squadScore'
 import { fetchLeaderboard } from '../lib/leaderboard'
-import { isSupabaseConfigured, type SquadPredictionRow } from '../lib/supabase'
+import { isSupabaseConfigured, type LeaderboardEntry, type ReferenceSquadRow } from '../lib/supabase'
 
 function squadSummary(squadParam: string): string {
   const state = decodeSquadFromUrl(squadParam)
   if (!state) return 'Invalid squad'
-  const captain = state.captainId ? PLAYERS_BY_ID[state.captainId]?.name : null
-  return `${state.formation} · ${state.selectedIds.length}/26${captain ? ` · C: ${captain.split(' ').pop()}` : ''}`
+  return formatSquadSummaryLine(state)
 }
 
 function buildSquadUrl(squadParam: string): string {
   const url = new URL(window.location.href)
   url.searchParams.set('s', squadParam)
+  url.searchParams.delete('admin')
   url.hash = 'builder'
   return url.toString()
 }
 
-export function Leaderboard() {
-  const [rows, setRows] = useState<SquadPredictionRow[]>([])
+interface LeaderboardProps {
+  refreshKey?: number
+}
+
+export function Leaderboard({ refreshKey = 0 }: LeaderboardProps) {
+  const [entries, setEntries] = useState<LeaderboardEntry[]>([])
+  const [reference, setReference] = useState<ReferenceSquadRow | null>(null)
   const [loading, setLoading] = useState(true)
   const configured = isSupabaseConfigured()
 
@@ -29,14 +35,15 @@ export function Leaderboard() {
       return
     }
     setLoading(true)
-    const data = await fetchLeaderboard(15)
-    setRows(data)
+    const result = await fetchLeaderboard(15)
+    setEntries(result.entries)
+    setReference(result.reference)
     setLoading(false)
   }, [configured])
 
   useEffect(() => {
     void load()
-  }, [load])
+  }, [load, refreshKey])
 
   if (!configured) {
     return (
@@ -52,7 +59,10 @@ export function Leaderboard() {
       <div className="flex items-center justify-between gap-2">
         <div>
           <h3 className="text-lg font-bold text-england-navy">Community Leaderboard</h3>
-          <p className="text-sm text-slate-500">Most viewed squad predictions</p>
+          <p className="text-sm text-slate-500">Ranked by accuracy vs the reference squad</p>
+          {reference?.label && (
+            <p className="mt-1 text-xs text-slate-400">Reference: {reference.label}</p>
+          )}
         </div>
         <button
           type="button"
@@ -63,15 +73,23 @@ export function Leaderboard() {
         </button>
       </div>
 
+      <div className="mt-3 rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-500">
+        10 pts per matching starter · 5 pts per matching bench player · 30 pts for correct captain
+      </div>
+
       {loading ? (
         <p className="mt-4 text-sm text-slate-400">Loading leaderboard…</p>
-      ) : rows.length === 0 ? (
+      ) : !reference ? (
         <p className="mt-4 text-sm text-slate-400">
-          No squads yet. Be the first to post yours!
+          Reference squad not set yet — leaderboard scoring will begin once published.
+        </p>
+      ) : entries.length === 0 ? (
+        <p className="mt-4 text-sm text-slate-400">
+          No squads submitted yet. Be the first to post yours!
         </p>
       ) : (
         <ol className="mt-4 space-y-2">
-          {rows.map((row, index) => (
+          {entries.map((row, index) => (
             <li key={row.id}>
               <a
                 href={buildSquadUrl(row.squad_param)}
@@ -83,15 +101,24 @@ export function Leaderboard() {
                   </span>
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold text-england-navy">
-                      {squadSummary(row.squad_param)}
+                      {row.bot_name ?? squadSummary(row.squad_param)}
+                      {row.is_bot && (
+                        <span className="ml-1.5 rounded bg-violet-100 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-violet-700">
+                          Bot
+                        </span>
+                      )}
                     </p>
+                    {row.bot_name && (
+                      <p className="truncate text-xs text-slate-500">{squadSummary(row.squad_param)}</p>
+                    )}
                     <p className="text-xs text-slate-400">
-                      Posted {new Date(row.created_at).toLocaleDateString()}
+                      {formatScoreBreakdown(row.score)} · Posted{' '}
+                      {new Date(row.created_at).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
                 <span className="shrink-0 rounded-full bg-white px-3 py-1 text-xs font-bold text-england-red ring-1 ring-slate-200">
-                  {row.view_count} {row.view_count === 1 ? 'view' : 'views'}
+                  {row.score.total} pts
                 </span>
               </a>
             </li>

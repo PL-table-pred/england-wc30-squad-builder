@@ -1,4 +1,3 @@
-import { getPlayer } from '../data/players'
 import { FORMATION_SLOTS } from '../utils/squadRules'
 import { computeSquadStats } from '../utils/squadStats'
 import type { UseSquadReturn } from '../hooks/useSquad'
@@ -11,7 +10,7 @@ interface SquadExportCardProps {
 export function SquadExportCard({ squad }: SquadExportCardProps) {
   const slots = FORMATION_SLOTS[squad.state.formation]
   const stats = computeSquadStats(squad.selectedPlayers)
-  const captain = squad.state.captainId ? getPlayer(squad.state.captainId) : null
+  const captain = squad.state.captainId ? squad.resolvePlayer(squad.state.captainId) : null
   const rows = getPitchRows(squad.state.formation)
 
   return (
@@ -57,7 +56,7 @@ export function SquadExportCard({ squad }: SquadExportCardProps) {
               {row.map((slotId) => {
                 const slot = slots.find((s) => s.id === slotId)!
                 const playerId = squad.state.startingXI[slotId]
-                const player = playerId ? getPlayer(playerId) : null
+                const player = playerId ? squad.resolvePlayer(playerId) : null
                 const isCaptain = playerId === squad.state.captainId
 
                 return (

@@ -21,10 +21,16 @@ export function computeSquadStats(players: Player[]): SquadStats {
     return { counts, breakdown, averageAge: null, youngest: null, oldest: null }
   }
 
-  const withAges = players.map((player) => ({
-    player,
-    age: getAgeIn2030(player.birthYear),
-  }))
+  const withAges = players
+    .filter((player) => !player.isCustom)
+    .map((player) => ({
+      player,
+      age: getAgeIn2030(player.birthYear),
+    }))
+
+  if (withAges.length === 0) {
+    return { counts, breakdown, averageAge: null, youngest: null, oldest: null }
+  }
 
   const totalAge = withAges.reduce((sum, { age }) => sum + age, 0)
   const averageAge = Math.round((totalAge / withAges.length) * 10) / 10

@@ -1,4 +1,3 @@
-import { getPlayer } from '../data/players'
 import type { UseSquadReturn } from '../hooks/useSquad'
 
 interface CaptainPickerProps {
@@ -28,7 +27,7 @@ export function CaptainPicker({ squad }: CaptainPickerProps) {
       </select>
       {squad.state.captainId && (
         <span className="rounded-full bg-england-navy px-2.5 py-0.5 text-xs font-bold text-white">
-          {getPlayer(squad.state.captainId)?.name}
+          {squad.resolvePlayer(squad.state.captainId)?.name}
         </span>
       )}
     </div>

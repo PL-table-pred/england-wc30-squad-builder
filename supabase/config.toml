@@ -1,0 +1,14 @@
+# England WC '30 — remote project nzypoiurjqvpohqmbide
+# Push auth URLs: npx supabase config push --project-ref nzypoiurjqvpohqmbide
+
+project_id = "nzypoiurjqvpohqmbide"
+
+[auth]
+site_url = "https://england-wc30-squad-builder.vercel.app"
+additional_redirect_urls = [
+  "https://england-wc30-squad-builder.vercel.app/**",
+  "http://localhost:5173/**",
+]
+
+[auth.email]
+enable_confirmations = true

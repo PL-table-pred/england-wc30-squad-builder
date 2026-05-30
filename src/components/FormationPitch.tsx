@@ -1,5 +1,4 @@
 import { useRef, useState } from 'react'
-import { getPlayer } from '../data/players'
 import { FORMATION_SLOTS } from '../utils/squadRules'
 import { setDragSlot } from '../utils/pitchDrag'
 import type { UseSquadReturn } from '../hooks/useSquad'
@@ -65,7 +64,7 @@ export function FormationPitch({ squad }: FormationPitchProps) {
                   {row.map((slotId) => {
                     const slot = slots.find((s) => s.id === slotId)!
                     const playerId = squad.state.startingXI[slotId]
-                    const player = playerId ? getPlayer(playerId) : null
+                    const player = playerId ? squad.resolvePlayer(playerId) : null
                     const isCaptain = playerId === squad.state.captainId
                     const isDragging = draggingSlot === slotId
 

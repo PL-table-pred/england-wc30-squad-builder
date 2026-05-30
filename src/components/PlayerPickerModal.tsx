@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import { PLAYERS } from '../data/players'
+import { inferPositionForSlot } from '../lib/customPlayers'
 import type { Position, SubPosition } from '../types/player'
 import type { UseSquadReturn } from '../hooks/useSquad'
+import { CustomPlayerSectionOption } from './CustomPlayerSectionOption'
 import { PlayerCard } from './PlayerCard'
 
 interface PlayerPickerModalProps {
@@ -16,6 +18,13 @@ interface PlayerPickerModalProps {
 }
 
 const FILTERS: Array<Position | 'ALL'> = ['ALL', 'GK', 'DEF', 'MID', 'FWD']
+
+const POSITION_SECTIONS: { position: Position; label: string }[] = [
+  { position: 'GK', label: 'Goalkeepers' },
+  { position: 'DEF', label: 'Defenders' },
+  { position: 'MID', label: 'Midfielders' },
+  { position: 'FWD', label: 'Forwards' },
+]
 
 export function PlayerPickerModal({
   open,
@@ -33,9 +42,14 @@ export function PlayerPickerModal({
   useEffect(() => {
     if (open) {
       setSearch('')
-      setFilter('ALL')
+      const slotPosition = inferPositionForSlot(slotSubPositions)
+      if (slotSubPositions?.length) {
+        setFilter(slotPosition)
+      } else {
+        setFilter('ALL')
+      }
     }
-  }, [open])
+  }, [open, slotSubPositions])
 
   useEffect(() => {
     if (!open) return
@@ -46,27 +60,46 @@ export function PlayerPickerModal({
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [open, onClose])
 
-  const filtered = useMemo(() => {
-    return PLAYERS.filter((player) => {
-      const matchesFilter = filter === 'ALL' || player.position === filter
-      const matchesSearch =
-        search.trim() === '' ||
-        player.name.toLowerCase().includes(search.toLowerCase()) ||
-        player.currentClub.toLowerCase().includes(search.toLowerCase())
-      return matchesFilter && matchesSearch
-    }).sort((a, b) => {
-      if (slotSubPositions) {
-        const aMatch = slotSubPositions.includes(a.subPosition) ? 0 : 1
-        const bMatch = slotSubPositions.includes(b.subPosition) ? 0 : 1
-        if (aMatch !== bMatch) return aMatch - bMatch
-      }
-      return a.name.localeCompare(b.name)
-    })
-  }, [filter, search, slotSubPositions])
+  const trimmedSearch = search.trim().toLowerCase()
+
+  const playersBySection = useMemo(() => {
+    const map = new Map<Position, typeof PLAYERS>()
+    for (const section of POSITION_SECTIONS) {
+      const players = PLAYERS.filter((player) => {
+        if (player.position !== section.position) return false
+        if (!trimmedSearch) return true
+        return (
+          player.name.toLowerCase().includes(trimmedSearch) ||
+          player.currentClub.toLowerCase().includes(trimmedSearch)
+        )
+      }).sort((a, b) => {
+        if (slotSubPositions?.length) {
+          const aMatch = slotSubPositions.includes(a.subPosition) ? 0 : 1
+          const bMatch = slotSubPositions.includes(b.subPosition) ? 0 : 1
+          if (aMatch !== bMatch) return aMatch - bMatch
+        }
+        return a.name.localeCompare(b.name)
+      })
+      map.set(section.position, players)
+    }
+    return map
+  }, [trimmedSearch, slotSubPositions])
+
+  const visibleSections =
+    filter === 'ALL' ? POSITION_SECTIONS : POSITION_SECTIONS.filter((s) => s.position === filter)
+
+  function handleCustomAdded(playerId: string) {
+    onSelect(playerId)
+    onClose()
+  }
 
   if (!open) return null
 
   const title = slotLabel ? `Choose ${slotLabel}` : 'Choose player'
+  const totalVisible = visibleSections.reduce(
+    (sum, section) => sum + (playersBySection.get(section.position)?.length ?? 0),
+    0,
+  )
 
   return (
     <div
@@ -90,8 +123,8 @@ export function PlayerPickerModal({
               </h2>
               <p className="mt-1 text-sm text-slate-500">
                 {slotSubPositions
-                  ? 'Suggested positions shown first.'
-                  : 'Pick a player to add to your squad.'}
+                  ? 'Suggested positions shown first in each section.'
+                  : 'Browse by position or search by name.'}
               </p>
             </div>
             <button
@@ -103,9 +136,10 @@ export function PlayerPickerModal({
               ✕
             </button>
           </div>
+
           <input
             type="search"
-            placeholder="Search by name or club..."
+            placeholder="Search by name or club…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             autoFocus
@@ -131,29 +165,56 @@ export function PlayerPickerModal({
         </div>
 
         <div className="flex-1 overflow-y-auto p-3">
-          <div className="grid gap-2">
-            {filtered.map((player) => {
-              const inSquad = squad.isSelected(player.id)
-              const canPick = inSquad || squad.canAdd(player.id).allowed
-              const check = squad.canAdd(player.id)
-              return (
-                <PlayerCard
-                  key={player.id}
-                  player={player}
-                  onSelect={(id) => {
-                    onSelect(id)
-                    onClose()
-                  }}
-                  disabled={!canPick}
-                  disabledReason={!inSquad ? check.reason : undefined}
-                  active={player.id === currentPlayerId}
-                  inSquad={inSquad}
+          {visibleSections.map((section) => {
+            const players = playersBySection.get(section.position) ?? []
+            return (
+              <section key={section.position} className="mb-5 last:mb-0">
+                <h3 className="mb-2 text-xs font-bold uppercase tracking-wide text-slate-400">
+                  {section.label}
+                </h3>
+
+                <CustomPlayerSectionOption
+                  position={section.position}
+                  squad={squad}
+                  onAdded={handleCustomAdded}
                 />
-              )
-            })}
-          </div>
-          {filtered.length === 0 && (
-            <p className="py-8 text-center text-sm text-slate-400">No players match your search.</p>
+
+                {players.length > 0 ? (
+                  <div className="grid gap-2">
+                    {players.map((player) => {
+                      const inSquad = squad.isSelected(player.id)
+                      const check = squad.canAdd(player.id)
+                      const canPick = inSquad || check.allowed
+                      return (
+                        <PlayerCard
+                          key={player.id}
+                          player={player}
+                          onSelect={(id) => {
+                            onSelect(id)
+                            onClose()
+                          }}
+                          disabled={!canPick}
+                          disabledReason={!inSquad ? check.reason : undefined}
+                          active={player.id === currentPlayerId}
+                          inSquad={inSquad}
+                        />
+                      )
+                    })}
+                  </div>
+                ) : (
+                  <p className="py-3 text-center text-xs text-slate-400">
+                    No players match your search in this section.
+                  </p>
+                )}
+              </section>
+            )
+          })}
+
+          {totalVisible === 0 && trimmedSearch && (
+            <p className="py-4 text-center text-sm text-slate-500">
+              Nobody in the list matches &ldquo;{search.trim()}&rdquo; — use{' '}
+              <span className="font-medium">Custom player</span> at the top of a position section.
+            </p>
           )}
         </div>
 

@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react'
+import { useAuth } from '../contexts/AuthContext'
+import { isAdminMode } from '../lib/adminAccess'
 import type { UseSquadReturn } from '../hooks/useSquad'
+import { AdminBotMaker } from './AdminBotMaker'
+import { AdminReferenceSquad } from './AdminReferenceSquad'
+import { AdminSecretGate } from './admin/AdminSecretGate'
 import { CaptainPicker } from './CaptainPicker'
 import { FormationPicker } from './FormationPicker'
 import { FormationPitch } from './FormationPitch'
@@ -15,8 +20,12 @@ interface SquadBuilderProps {
 }
 
 export function SquadBuilder({ squad }: SquadBuilderProps) {
+  const { isAdmin, isProfileAdmin } = useAuth()
   const [mobileTab, setMobileTab] = useState<MobileTab>('pitch')
   const [leaderboardKey, setLeaderboardKey] = useState(0)
+
+  const showAdminSection = isAdminMode() && isAdmin
+  const needsAdminUnlock = isAdminMode() && !isAdmin
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -49,9 +58,33 @@ export function SquadBuilder({ squad }: SquadBuilderProps) {
         <CaptainPicker squad={squad} />
       </div>
 
+      {needsAdminUnlock && (
+        <div className="mb-6">
+          <AdminSecretGate onUnlocked={() => undefined} />
+        </div>
+      )}
+
+      {showAdminSection && (
+        <div className="mb-6 space-y-4">
+          <AdminReferenceSquad
+            squad={squad}
+            embedded
+            onPublished={() => setLeaderboardKey((k) => k + 1)}
+          />
+          <div className="rounded-xl border border-violet-200 bg-violet-50 p-4 shadow-sm">
+            <AdminBotMaker embedded onBotsChanged={() => setLeaderboardKey((k) => k + 1)} />
+          </div>
+          {!isProfileAdmin && (
+            <p className="text-center text-xs text-slate-500">
+              Admin tools unlocked with secret for this browser session.
+            </p>
+          )}
+        </div>
+      )}
+
       <ShareBar squad={squad} onLeaderboardSubmit={() => setLeaderboardKey((k) => k + 1)} />
       <SquadCompare squad={squad} />
-      <Leaderboard key={leaderboardKey} />
+      <Leaderboard refreshKey={leaderboardKey} />
 
       <div className="mt-4 lg:hidden">
         <div className="flex rounded-lg bg-slate-100 p-1">
