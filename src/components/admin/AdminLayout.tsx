@@ -4,7 +4,8 @@ import { AdminRoute } from './AdminRoute'
 function AdminLayoutInner() {
   const location = useLocation()
   const isDashboard = location.pathname === '/admin'
-  const isWidePage = location.pathname.startsWith('/admin/bots')
+  const isWidePage =
+    location.pathname.startsWith('/admin/bots') || location.pathname.startsWith('/admin/players')
 
   return (
     <div className="min-h-screen bg-slate-50">

@@ -1,4 +1,5 @@
 import { fetchContestSettings } from './admin'
+import { normalizeSiteSettings } from './playerPool'
 import { getContactEmail as getEnvContactEmail } from './siteMeta'
 import { isSupabaseConfigured } from './supabase'
 
@@ -9,10 +10,15 @@ export function resolveContactEmail(fromDatabase?: string | null): string {
   return getEnvContactEmail()
 }
 
-export async function fetchPublicContactEmail(): Promise<string> {
+export async function fetchPublicSiteSettings() {
   if (!isSupabaseConfigured()) {
-    return getEnvContactEmail()
+    return normalizeSiteSettings(null)
   }
   const settings = await fetchContestSettings()
+  return normalizeSiteSettings(settings)
+}
+
+export async function fetchPublicContactEmail(): Promise<string> {
+  const settings = await fetchPublicSiteSettings()
   return resolveContactEmail(settings.contact_email)
 }

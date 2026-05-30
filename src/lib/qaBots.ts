@@ -1,5 +1,7 @@
 import { generateBotSquadParam } from './generateBotSquad'
+import { filterPlayersBySettings } from './playerPool'
 import { pickUniqueQaPersonas } from './qaDisplayNames'
+import { fetchPublicSiteSettings } from './siteSettings'
 import { getSupabase, type QaBotRow } from './supabase'
 
 export type SeedQaBotsResult = {
@@ -37,9 +39,11 @@ export async function seedQaBots(
 
   const safeCount = Math.min(50, Math.max(1, count))
   const personas = pickUniqueQaPersonas(safeCount)
+  const settings = await fetchPublicSiteSettings()
+  const pool = filterPlayersBySettings(settings)
   const payload = personas.map((persona) => ({
     bot_name: persona.displayName,
-    squad_param: generateBotSquadParam(),
+    squad_param: generateBotSquadParam(pool),
   }))
 
   const { data, error } = await supabase.rpc('seed_qa_bot_squads', {

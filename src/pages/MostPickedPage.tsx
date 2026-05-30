@@ -7,11 +7,15 @@ import {
   PickStatsTable,
   PositionBreakdown,
 } from '../components/PickStatsTable'
+import { useAuth } from '../contexts/AuthContext'
+import { useSiteFeatures } from '../contexts/SiteFeaturesContext'
 import { fetchPickStats } from '../lib/pickStats'
 import { isSupabaseConfigured } from '../lib/supabase'
 import type { PickAggregationResult } from '../utils/aggregatePicks'
 
 export function MostPickedPage() {
+  const { isAdmin } = useAuth()
+  const { settings: siteSettings, loading: settingsLoading } = useSiteFeatures()
   const configured = isSupabaseConfigured()
   const [stats, setStats] = useState<PickAggregationResult | null>(null)
   const [includeBots, setIncludeBots] = useState(false)
@@ -46,11 +50,22 @@ export function MostPickedPage() {
   }, [load])
 
   const total = stats?.totalSubmissions ?? 0
+  const statsDisabled = !settingsLoading && !siteSettings.stats_page_enabled && !isAdmin
 
   return (
     <div className="min-h-screen bg-slate-50">
       <Header />
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+        {statsDisabled ? (
+          <div className="rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm">
+            <h1 className="text-2xl font-bold text-england-navy">Most picked</h1>
+            <p className="mt-3 text-slate-600">Community stats are temporarily unavailable.</p>
+            <Link to="/" className="mt-6 inline-block font-semibold text-england-red hover:underline">
+              Back to squad builder
+            </Link>
+          </div>
+        ) : (
+          <>
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-sm font-semibold uppercase tracking-widest text-england-red">Community</p>
@@ -165,6 +180,8 @@ export function MostPickedPage() {
                 .
               </p>
             ) : null}
+          </>
+        )}
           </>
         )}
       </main>

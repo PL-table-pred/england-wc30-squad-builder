@@ -1,4 +1,4 @@
-import type { Player } from '../types/player'
+import type { Player, PoolTier } from '../types/player'
 
 function p(
   id: string,
@@ -7,8 +7,17 @@ function p(
   subPosition: Player['subPosition'],
   birthYear: number,
   currentClub: string,
+  poolTier?: PoolTier,
 ): Player {
-  return { id, name, position, subPosition, birthYear, currentClub }
+  return {
+    id,
+    name,
+    position,
+    subPosition,
+    birthYear,
+    currentClub,
+    ...(poolTier ? { poolTier } : {}),
+  }
 }
 
 export const PLAYERS: Player[] = [
@@ -20,12 +29,12 @@ export const PLAYERS: Player[] = [
   p('gk-pickford', 'Jordan Pickford', 'GK', 'GK', 1994, 'Everton'),
   p('gk-woodman', 'Freddie Woodman', 'GK', 'GK', 1997, 'Preston'),
   // U21 / U18 goalkeepers
-  p('gk-sharman-lowe', 'Teddy Sharman-Lowe', 'GK', 'GK', 2003, 'Chelsea'),
-  p('gk-simkin', 'Tommy Simkin', 'GK', 'GK', 2005, 'Stoke'),
-  p('gk-setford', 'Tommy Setford', 'GK', 'GK', 2006, 'Arsenal'),
-  p('gk-bernal', 'Freddy Bernal', 'GK', 'GK', 2008, 'Chelsea'),
-  p('gk-hooper', 'Finley Hooper', 'GK', 'GK', 2008, 'West Ham'),
-  p('gk-moody', 'Dylan Moody', 'GK', 'GK', 2008, 'Southampton'),
+  p('gk-sharman-lowe', 'Teddy Sharman-Lowe', 'GK', 'GK', 2003, 'Chelsea', 'u21'),
+  p('gk-simkin', 'Tommy Simkin', 'GK', 'GK', 2005, 'Stoke', 'u21'),
+  p('gk-setford', 'Tommy Setford', 'GK', 'GK', 2006, 'Arsenal', 'u21'),
+  p('gk-bernal', 'Freddy Bernal', 'GK', 'GK', 2008, 'Chelsea', 'u18'),
+  p('gk-hooper', 'Finley Hooper', 'GK', 'GK', 2008, 'West Ham', 'u18'),
+  p('gk-moody', 'Dylan Moody', 'GK', 'GK', 2008, 'Southampton', 'u18'),
 
   // Defenders
   p('def-guehi', 'Marc Guéhi', 'DEF', 'CB', 2000, 'Crystal Palace'),
@@ -51,22 +60,22 @@ export const PLAYERS: Player[] = [
   p('def-harwood-bellis', 'Taylor Harwood-Bellis', 'DEF', 'CB', 2002, 'Southampton'),
   p('def-spence', 'Djed Spence', 'DEF', 'LB', 2000, 'Spurs'),
   // U21 / U18 defenders
-  p('def-edwards', 'Ronnie Edwards', 'DEF', 'CB', 2003, 'Southampton'),
-  p('def-egan-riley', 'CJ Egan-Riley', 'DEF', 'CB', 2003, 'Burnley'),
-  p('def-norton-cuffy', 'Brooke Norton-Cuffy', 'DEF', 'RB', 2005, 'Genoa'),
-  p('def-acheampong', 'Josh Acheampong', 'DEF', 'RB', 2005, 'Chelsea'),
-  p('def-alleyne', 'Max Alleyne', 'DEF', 'CB', 2006, 'Man City'),
-  p('def-nelson', 'Ben Nelson', 'DEF', 'CB', 2004, 'Leicester'),
-  p('def-phillips', 'Ashley Phillips', 'DEF', 'CB', 2005, 'Stoke'),
-  p('def-small', 'Thierry Small', 'DEF', 'LB', 2004, 'Preston'),
-  p('def-benamar', 'Dean Benamar', 'DEF', 'CB', 2008, 'Crystal Palace'),
-  p('def-braithwaite', 'Kaden Braithwaite', 'DEF', 'CB', 2008, 'Man City'),
-  p('def-emenalo', 'Landon Emenalo', 'DEF', 'CB', 2008, 'Chelsea'),
-  p('def-hardy', 'Malachi Hardy', 'DEF', 'LB', 2008, 'Spurs'),
-  p('def-headley', 'Dante Headley', 'DEF', 'CB', 2008, 'Man City'),
-  p('def-helafu', 'Yuel Helafu', 'DEF', 'CB', 2008, 'Man Utd'),
-  p('def-kukonki', 'Godwill Kukonki', 'DEF', 'CB', 2008, 'Man Utd'),
-  p('def-mills', 'Albert Mills', 'DEF', 'RB', 2008, 'Man Utd'),
+  p('def-edwards', 'Ronnie Edwards', 'DEF', 'CB', 2003, 'Southampton', 'u21'),
+  p('def-egan-riley', 'CJ Egan-Riley', 'DEF', 'CB', 2003, 'Burnley', 'u21'),
+  p('def-norton-cuffy', 'Brooke Norton-Cuffy', 'DEF', 'RB', 2005, 'Genoa', 'u21'),
+  p('def-acheampong', 'Josh Acheampong', 'DEF', 'RB', 2005, 'Chelsea', 'u21'),
+  p('def-alleyne', 'Max Alleyne', 'DEF', 'CB', 2006, 'Man City', 'u21'),
+  p('def-nelson', 'Ben Nelson', 'DEF', 'CB', 2004, 'Leicester', 'u21'),
+  p('def-phillips', 'Ashley Phillips', 'DEF', 'CB', 2005, 'Stoke', 'u21'),
+  p('def-small', 'Thierry Small', 'DEF', 'LB', 2004, 'Preston', 'u21'),
+  p('def-benamar', 'Dean Benamar', 'DEF', 'CB', 2008, 'Crystal Palace', 'u18'),
+  p('def-braithwaite', 'Kaden Braithwaite', 'DEF', 'CB', 2008, 'Man City', 'u18'),
+  p('def-emenalo', 'Landon Emenalo', 'DEF', 'CB', 2008, 'Chelsea', 'u18'),
+  p('def-hardy', 'Malachi Hardy', 'DEF', 'LB', 2008, 'Spurs', 'u18'),
+  p('def-headley', 'Dante Headley', 'DEF', 'CB', 2008, 'Man City', 'u18'),
+  p('def-helafu', 'Yuel Helafu', 'DEF', 'CB', 2008, 'Man Utd', 'u18'),
+  p('def-kukonki', 'Godwill Kukonki', 'DEF', 'CB', 2008, 'Man Utd', 'u18'),
+  p('def-mills', 'Albert Mills', 'DEF', 'RB', 2008, 'Man Utd', 'u18'),
 
   // Midfielders
   p('mid-bellingham', 'Jude Bellingham', 'MID', 'CM', 2003, 'Real Madrid'),
@@ -91,17 +100,17 @@ export const PLAYERS: Player[] = [
   p('mid-mount', 'Mason Mount', 'MID', 'CAM', 1999, 'Man Utd'),
   p('mid-phillips', 'Kalvin Phillips', 'MID', 'CDM', 1995, 'Ipswich'),
   // U21 / U18 midfielders
-  p('mid-hackney', 'Hayden Hackney', 'MID', 'CDM', 2003, 'Middlesbrough'),
-  p('mid-hinshelwood', 'Jack Hinshelwood', 'MID', 'CM', 2005, 'Brighton'),
-  p('mid-morton', 'Tyler Morton', 'MID', 'CM', 2002, 'Liverpool'),
-  p('mid-fisher', 'Kellen Fisher', 'MID', 'CM', 2006, 'Norwich'),
-  p('mid-peck', 'Sydie Peck', 'MID', 'CM', 2006, 'Sheffield Utd'),
-  p('mid-gorman', 'Finlay Gorman', 'MID', 'CM', 2008, 'Man City'),
-  p('mid-howell', 'Harry Howell', 'MID', 'CM', 2008, 'Brighton'),
-  p('mid-ibrahim', 'Ifeoluwa Ibrahim', 'MID', 'CM', 2008, 'Arsenal'),
-  p('mid-miles', 'Harrison Miles', 'MID', 'CM', 2008, 'Man City'),
-  p('mid-page', 'Louis Page', 'MID', 'CM', 2008, 'Leicester'),
-  p('mid-walsh', 'Reggie Walsh', 'MID', 'CM', 2008, 'Chelsea'),
+  p('mid-hackney', 'Hayden Hackney', 'MID', 'CDM', 2003, 'Middlesbrough', 'u21'),
+  p('mid-hinshelwood', 'Jack Hinshelwood', 'MID', 'CM', 2005, 'Brighton', 'u21'),
+  p('mid-morton', 'Tyler Morton', 'MID', 'CM', 2002, 'Liverpool', 'u21'),
+  p('mid-fisher', 'Kellen Fisher', 'MID', 'CM', 2006, 'Norwich', 'u21'),
+  p('mid-peck', 'Sydie Peck', 'MID', 'CM', 2006, 'Sheffield Utd', 'u21'),
+  p('mid-gorman', 'Finlay Gorman', 'MID', 'CM', 2008, 'Man City', 'u18'),
+  p('mid-howell', 'Harry Howell', 'MID', 'CM', 2008, 'Brighton', 'u18'),
+  p('mid-ibrahim', 'Ifeoluwa Ibrahim', 'MID', 'CM', 2008, 'Arsenal', 'u18'),
+  p('mid-miles', 'Harrison Miles', 'MID', 'CM', 2008, 'Man City', 'u18'),
+  p('mid-page', 'Louis Page', 'MID', 'CM', 2008, 'Leicester', 'u18'),
+  p('mid-walsh', 'Reggie Walsh', 'MID', 'CM', 2008, 'Chelsea', 'u18'),
 
   // Forwards
   p('fwd-saka', 'Bukayo Saka', 'FWD', 'RW', 2001, 'Arsenal'),
@@ -124,23 +133,23 @@ export const PLAYERS: Player[] = [
   p('fwd-nketiah', 'Eddie Nketiah', 'FWD', 'ST', 1999, 'Crystal Palace'),
   p('fwd-broja', 'Armando Broja', 'FWD', 'ST', 2001, 'Burnley'),
   // U21 / U18 forwards
-  p('fwd-hutchinson', 'Omari Hutchinson', 'FWD', 'RW', 2003, 'Ipswich'),
-  p('fwd-iling-jnr', 'Sam Iling-Junior', 'FWD', 'LW', 2004, 'Aston Villa'),
-  p('fwd-mcatee', 'James McAtee', 'FWD', 'CAM', 2002, 'Man City'),
-  p('fwd-rowe', 'Jonathan Rowe', 'FWD', 'LW', 2003, 'Marseille'),
-  p('fwd-stansfield', 'Jay Stansfield', 'FWD', 'ST', 2002, 'Birmingham'),
-  p('fwd-dibling', 'Tyler Dibling', 'FWD', 'RW', 2006, 'Everton'),
-  p('fwd-esse', 'Romain Esse', 'FWD', 'RW', 2005, 'Coventry'),
-  p('fwd-george', 'Tyrique George', 'FWD', 'LW', 2006, 'Everton'),
-  p('fwd-king', 'Josh King', 'FWD', 'ST', 2006, 'Fulham'),
-  p('fwd-mubama', 'Divin Mubama', 'FWD', 'ST', 2004, 'Stoke'),
-  p('fwd-fellows', 'Tom Fellows', 'FWD', 'RW', 2003, 'West Brom'),
-  p('fwd-ezenwata', 'Chizaram Ezenwata', 'FWD', 'ST', 2008, 'Chelsea'),
-  p('fwd-heskey', 'Reigan Heskey', 'FWD', 'ST', 2008, 'Man City'),
-  p('fwd-mcaidoo', 'Ryan McAidoo', 'FWD', 'ST', 2008, 'Man City'),
-  p('fwd-monga', 'Jeremy Monga', 'FWD', 'LW', 2008, 'Leicester'),
-  p('fwd-rodriguez', 'Alejandro Rodriguez', 'FWD', 'ST', 2008, 'Annecy'),
-  p('fwd-thompson', 'Tynan Thompson', 'FWD', 'ST', 2008, 'Spurs'),
+  p('fwd-hutchinson', 'Omari Hutchinson', 'FWD', 'RW', 2003, 'Ipswich', 'u21'),
+  p('fwd-iling-jnr', 'Sam Iling-Junior', 'FWD', 'LW', 2004, 'Aston Villa', 'u21'),
+  p('fwd-mcatee', 'James McAtee', 'FWD', 'CAM', 2002, 'Man City', 'u21'),
+  p('fwd-rowe', 'Jonathan Rowe', 'FWD', 'LW', 2003, 'Marseille', 'u21'),
+  p('fwd-stansfield', 'Jay Stansfield', 'FWD', 'ST', 2002, 'Birmingham', 'u21'),
+  p('fwd-dibling', 'Tyler Dibling', 'FWD', 'RW', 2006, 'Everton', 'u21'),
+  p('fwd-esse', 'Romain Esse', 'FWD', 'RW', 2005, 'Coventry', 'u21'),
+  p('fwd-george', 'Tyrique George', 'FWD', 'LW', 2006, 'Everton', 'u21'),
+  p('fwd-king', 'Josh King', 'FWD', 'ST', 2006, 'Fulham', 'u21'),
+  p('fwd-mubama', 'Divin Mubama', 'FWD', 'ST', 2004, 'Stoke', 'u21'),
+  p('fwd-fellows', 'Tom Fellows', 'FWD', 'RW', 2003, 'West Brom', 'u21'),
+  p('fwd-ezenwata', 'Chizaram Ezenwata', 'FWD', 'ST', 2008, 'Chelsea', 'u18'),
+  p('fwd-heskey', 'Reigan Heskey', 'FWD', 'ST', 2008, 'Man City', 'u18'),
+  p('fwd-mcaidoo', 'Ryan McAidoo', 'FWD', 'ST', 2008, 'Man City', 'u18'),
+  p('fwd-monga', 'Jeremy Monga', 'FWD', 'LW', 2008, 'Leicester', 'u18'),
+  p('fwd-rodriguez', 'Alejandro Rodriguez', 'FWD', 'ST', 2008, 'Annecy', 'u18'),
+  p('fwd-thompson', 'Tynan Thompson', 'FWD', 'ST', 2008, 'Spurs', 'u18'),
 ]
 
 export const PLAYERS_BY_ID = Object.fromEntries(PLAYERS.map((player) => [player.id, player])) as Record<

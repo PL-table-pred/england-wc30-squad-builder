@@ -19,6 +19,9 @@ export type SubPosition =
 
 export type Formation = '4-3-3' | '4-2-3-1' | '3-4-3' | '4-4-2'
 
+/** Youth squads from FA call-ups; senior pool has no tier. */
+export type PoolTier = 'senior' | 'u21' | 'u18'
+
 export interface Player {
   id: string
   name: string
@@ -26,6 +29,8 @@ export interface Player {
   subPosition: SubPosition
   birthYear: number
   currentClub: string
+  /** Omitted = senior WC pool; u21/u18 = youth call-up lists. */
+  poolTier?: PoolTier
   /** User-typed name not in the built-in pool. */
   isCustom?: boolean
 }

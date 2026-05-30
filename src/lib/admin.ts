@@ -12,29 +12,58 @@ export interface AdminProfileRow {
   created_at: string
 }
 
-export interface ContestSettings {
+export interface SiteSettings {
   submissions_locked: boolean
   contact_email?: string | null
+  youth_u21_enabled: boolean
+  youth_u18_enabled: boolean
+  stats_page_enabled: boolean
+  disabled_player_ids: string[]
 }
 
-export async function fetchContestSettings(): Promise<ContestSettings> {
+/** @deprecated Use SiteSettings */
+export type ContestSettings = SiteSettings
+
+export async function fetchContestSettings(): Promise<SiteSettings> {
   const supabase = getSupabase()
-  if (!supabase) return { submissions_locked: false }
+  if (!supabase) {
+    return {
+      submissions_locked: false,
+      youth_u21_enabled: true,
+      youth_u18_enabled: true,
+      stats_page_enabled: true,
+      disabled_player_ids: [],
+    }
+  }
 
   const { data, error } = await supabase.rpc('get_contest_settings')
   if (error) {
     console.error('Contest settings fetch failed:', error.message)
-    return { submissions_locked: false }
+    return {
+      submissions_locked: false,
+      youth_u21_enabled: true,
+      youth_u18_enabled: true,
+      stats_page_enabled: true,
+      disabled_player_ids: [],
+    }
   }
 
-  const settings = data as ContestSettings
-  return { submissions_locked: settings.submissions_locked ?? false }
+  const settings = data as SiteSettings
+  const disabled = settings.disabled_player_ids
+  return {
+    submissions_locked: settings.submissions_locked ?? false,
+    contact_email: settings.contact_email ?? null,
+    youth_u21_enabled: settings.youth_u21_enabled ?? true,
+    youth_u18_enabled: settings.youth_u18_enabled ?? true,
+    stats_page_enabled: settings.stats_page_enabled ?? true,
+    disabled_player_ids: Array.isArray(disabled) ? disabled : [],
+  }
 }
 
 export async function setContestSettings(
   submissionsLocked: boolean,
   adminSecret?: string,
-): Promise<{ ok: boolean; settings?: ContestSettings; error?: string }> {
+): Promise<{ ok: boolean; settings?: SiteSettings; error?: string }> {
   const supabase = getSupabase()
   if (!supabase) {
     return { ok: false, error: 'Supabase is not configured.' }
@@ -49,13 +78,61 @@ export async function setContestSettings(
     return { ok: false, error: error.message }
   }
 
-  return { ok: true, settings: data as ContestSettings }
+  return { ok: true, settings: data as SiteSettings }
+}
+
+export async function setSiteFeatures(
+  features: {
+    youthU21Enabled: boolean
+    youthU18Enabled: boolean
+    statsPageEnabled: boolean
+  },
+  adminSecret?: string,
+): Promise<{ ok: boolean; settings?: SiteSettings; error?: string }> {
+  const supabase = getSupabase()
+  if (!supabase) {
+    return { ok: false, error: 'Supabase is not configured.' }
+  }
+
+  const { data, error } = await supabase.rpc('set_site_features', {
+    p_youth_u21_enabled: features.youthU21Enabled,
+    p_youth_u18_enabled: features.youthU18Enabled,
+    p_stats_page_enabled: features.statsPageEnabled,
+    p_admin_secret: adminSecret ?? (getStoredAdminSecret() || null),
+  })
+
+  if (error) {
+    return { ok: false, error: error.message }
+  }
+
+  return { ok: true, settings: data as SiteSettings }
+}
+
+export async function setDisabledPlayerIds(
+  playerIds: string[],
+  adminSecret?: string,
+): Promise<{ ok: boolean; settings?: SiteSettings; error?: string }> {
+  const supabase = getSupabase()
+  if (!supabase) {
+    return { ok: false, error: 'Supabase is not configured.' }
+  }
+
+  const { data, error } = await supabase.rpc('set_disabled_player_ids', {
+    p_player_ids: playerIds,
+    p_admin_secret: adminSecret ?? (getStoredAdminSecret() || null),
+  })
+
+  if (error) {
+    return { ok: false, error: error.message }
+  }
+
+  return { ok: true, settings: data as SiteSettings }
 }
 
 export async function setContactEmail(
   contactEmail: string,
   adminSecret?: string,
-): Promise<{ ok: boolean; settings?: ContestSettings; error?: string }> {
+): Promise<{ ok: boolean; settings?: SiteSettings; error?: string }> {
   const supabase = getSupabase()
   if (!supabase) {
     return { ok: false, error: 'Supabase is not configured.' }
@@ -70,7 +147,7 @@ export async function setContactEmail(
     return { ok: false, error: error.message }
   }
 
-  return { ok: true, settings: data as ContestSettings }
+  return { ok: true, settings: data as SiteSettings }
 }
 
 export async function fetchAdminUsers(): Promise<AdminProfileRow[]> {

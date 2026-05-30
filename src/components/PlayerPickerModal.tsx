@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { PLAYERS } from '../data/players'
+import { useSiteFeatures } from '../contexts/SiteFeaturesContext'
 import { inferPositionForSlot } from '../lib/customPlayers'
 import type { Position, SubPosition } from '../types/player'
 import type { UseSquadReturn } from '../hooks/useSquad'
@@ -36,6 +36,7 @@ export function PlayerPickerModal({
   currentPlayerId,
   onClear,
 }: PlayerPickerModalProps) {
+  const { availablePlayers } = useSiteFeatures()
   const [search, setSearch] = useState('')
   const [filter, setFilter] = useState<Position | 'ALL'>('ALL')
 
@@ -63,9 +64,9 @@ export function PlayerPickerModal({
   const trimmedSearch = search.trim().toLowerCase()
 
   const playersBySection = useMemo(() => {
-    const map = new Map<Position, typeof PLAYERS>()
+    const map = new Map<Position, typeof availablePlayers>()
     for (const section of POSITION_SECTIONS) {
-      const players = PLAYERS.filter((player) => {
+      const players = availablePlayers.filter((player) => {
         if (player.position !== section.position) return false
         if (!trimmedSearch) return true
         return (
@@ -83,7 +84,7 @@ export function PlayerPickerModal({
       map.set(section.position, players)
     }
     return map
-  }, [trimmedSearch, slotSubPositions])
+  }, [trimmedSearch, slotSubPositions, availablePlayers])
 
   const visibleSections =
     filter === 'ALL' ? POSITION_SECTIONS : POSITION_SECTIONS.filter((s) => s.position === filter)

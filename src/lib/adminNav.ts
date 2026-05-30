@@ -13,6 +13,12 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
     description: 'Publish the answer key used for leaderboard scoring.',
   },
   {
+    id: 'players',
+    href: '/admin/players',
+    title: 'Player pool',
+    description: 'U21/U18 squads, hide players, and most-picked stats toggle.',
+  },
+  {
     id: 'settings',
     href: '/admin/settings',
     title: 'Site & contest settings',

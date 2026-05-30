@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useSiteFeatures } from '../contexts/SiteFeaturesContext'
 import { decodeSquadFromUrl } from '../utils/shareSquad'
 import { formatSquadSummaryLine } from '../lib/customPlayers'
 import { formatScoreBreakdown } from '../utils/squadScore'
@@ -25,6 +26,7 @@ interface LeaderboardProps {
 }
 
 export function Leaderboard({ refreshKey = 0 }: LeaderboardProps) {
+  const { settings: siteSettings } = useSiteFeatures()
   const [entries, setEntries] = useState<LeaderboardEntry[]>([])
   const [reference, setReference] = useState<ReferenceSquadRow | null>(null)
   const [loading, setLoading] = useState(true)
@@ -66,12 +68,14 @@ export function Leaderboard({ refreshKey = 0 }: LeaderboardProps) {
           )}
         </div>
         <div className="flex shrink-0 items-center gap-2">
-          <Link
-            to="/stats"
-            className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-england-navy hover:bg-slate-50"
-          >
-            Most picked →
-          </Link>
+          {siteSettings.stats_page_enabled && (
+            <Link
+              to="/stats"
+              className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-england-navy hover:bg-slate-50"
+            >
+              Most picked →
+            </Link>
+          )}
           <button
             type="button"
             onClick={() => void load()}

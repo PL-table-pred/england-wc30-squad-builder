@@ -1,5 +1,5 @@
 import { PLAYERS } from '../data/players'
-import type { Formation, SquadState } from '../types/player'
+import type { Formation, Player, SquadState } from '../types/player'
 import { MAX_SQUAD_SIZE, MIN_GOALKEEPERS } from '../types/player'
 import { autoAssignStartingXI, FORMATIONS } from '../utils/squadRules'
 import { encodeSquadToUrl } from '../utils/shareSquad'
@@ -77,8 +77,9 @@ function pickPlayersForPosition(
   position: 'GK' | 'DEF' | 'MID' | 'FWD',
   count: number,
   used: Set<string>,
+  allPlayers: Player[],
 ): string[] {
-  const pool = PLAYERS.filter((p) => p.position === position && !used.has(p.id))
+  const pool = allPlayers.filter((p) => p.position === position && !used.has(p.id))
   const picked: string[] = []
 
   for (let i = 0; i < count; i++) {
@@ -91,23 +92,23 @@ function pickPlayersForPosition(
   return picked
 }
 
-function pickCaptain(xiIds: string[]): string | null {
+function pickCaptain(xiIds: string[], allPlayers: Player[]): string | null {
   const xiPlayers = xiIds
-    .map((id) => PLAYERS.find((p) => p.id === id))
-    .filter((p): p is (typeof PLAYERS)[number] => Boolean(p))
+    .map((id) => allPlayers.find((p) => p.id === id))
+    .filter((p): p is Player => Boolean(p))
   const captain = weightedPick(xiPlayers, (p) => CAPTAIN_WEIGHTS[p.id] ?? 1)
   return captain?.id ?? xiIds[0] ?? null
 }
 
 /** Build a random but realistic complete squad for a QA bot. */
-export function generateBotSquadState(): SquadState {
+export function generateBotSquadState(pool: Player[] = PLAYERS): SquadState {
   const formation = pickFormation()
   const composition = pickSquadComposition()
   const used = new Set<string>()
   const selectedIds: string[] = []
 
   for (const position of ['GK', 'DEF', 'MID', 'FWD'] as const) {
-    const ids = pickPlayersForPosition(position, composition[position], used)
+    const ids = pickPlayersForPosition(position, composition[position], used, pool)
     for (const id of ids) {
       selectedIds.push(id)
       used.add(id)
@@ -115,7 +116,7 @@ export function generateBotSquadState(): SquadState {
   }
 
   while (selectedIds.length < MAX_SQUAD_SIZE) {
-    const remaining = PLAYERS.filter((p) => !used.has(p.id))
+    const remaining = pool.filter((p) => !used.has(p.id))
     const choice = weightedPick(remaining, (p) => PLAYER_WEIGHTS[p.id] ?? 1)
     if (!choice) break
     selectedIds.push(choice.id)
@@ -123,12 +124,12 @@ export function generateBotSquadState(): SquadState {
   }
 
   const selectedPlayers = selectedIds
-    .map((id) => PLAYERS.find((p) => p.id === id))
-    .filter((p): p is NonNullable<typeof p> => Boolean(p))
+    .map((id) => pool.find((p) => p.id === id))
+    .filter((p): p is Player => Boolean(p))
 
   const startingXI = autoAssignStartingXI(formation, selectedPlayers)
   const xiIds = Object.values(startingXI).filter((id): id is string => Boolean(id))
-  const captainId = pickCaptain(xiIds)
+  const captainId = pickCaptain(xiIds, pool)
 
   return {
     formation,
@@ -138,6 +139,6 @@ export function generateBotSquadState(): SquadState {
   }
 }
 
-export function generateBotSquadParam(): string {
-  return encodeSquadToUrl(generateBotSquadState())
+export function generateBotSquadParam(pool: Player[] = PLAYERS): string {
+  return encodeSquadToUrl(generateBotSquadState(pool))
 }

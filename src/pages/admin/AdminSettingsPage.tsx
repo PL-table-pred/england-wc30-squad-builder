@@ -68,7 +68,11 @@ export function AdminSettingsPage() {
         <h2 className="text-2xl font-bold text-england-navy">Site &amp; contest settings</h2>
         <p className="mt-1 text-sm text-slate-500">
           Control leaderboard submissions and the public contact address on About, Privacy, and Contact
-          pages (Google AdSense compliance).
+          pages (Google AdSense compliance). For youth squads and stats, use{' '}
+          <Link to="/admin/players" className="font-semibold text-england-red hover:underline">
+            Player pool
+          </Link>
+          .
         </p>
       </div>
 
