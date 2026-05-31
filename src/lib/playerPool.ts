@@ -8,6 +8,7 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   youth_u21_enabled: true,
   youth_u18_enabled: true,
   stats_page_enabled: true,
+  blog_enabled: true,
   disabled_player_ids: [],
 }
 
@@ -19,6 +20,7 @@ export function normalizeSiteSettings(raw: Partial<SiteSettings> | null | undefi
     youth_u21_enabled: raw?.youth_u21_enabled ?? true,
     youth_u18_enabled: raw?.youth_u18_enabled ?? true,
     stats_page_enabled: raw?.stats_page_enabled ?? true,
+    blog_enabled: raw?.blog_enabled ?? true,
     disabled_player_ids: Array.isArray(disabled) ? disabled.filter((id) => typeof id === 'string') : [],
   }
 }

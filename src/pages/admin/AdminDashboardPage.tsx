@@ -6,6 +6,7 @@ import { fetchContestSettings } from '../../lib/admin'
 import { fetchAllPredictions, fetchReferenceSquad } from '../../lib/leaderboard'
 import { countPlayersByTier, normalizeSiteSettings } from '../../lib/playerPool'
 import { fetchQaBots } from '../../lib/qaBots'
+import { fetchAdminBlogPosts } from '../../lib/blogAdmin'
 
 export function AdminDashboardPage() {
   const [referenceSet, setReferenceSet] = useState(false)
@@ -16,15 +17,18 @@ export function AdminDashboardPage() {
   const [u21Enabled, setU21Enabled] = useState(true)
   const [u18Enabled, setU18Enabled] = useState(true)
   const [statsEnabled, setStatsEnabled] = useState(true)
+  const [blogEnabled, setBlogEnabled] = useState(true)
+  const [publishedPosts, setPublishedPosts] = useState(0)
   const [visiblePool, setVisiblePool] = useState(0)
 
   useEffect(() => {
     void (async () => {
-      const [reference, settingsRaw, predictions, bots] = await Promise.all([
+      const [reference, settingsRaw, predictions, bots, blogPosts] = await Promise.all([
         fetchReferenceSquad(),
         fetchContestSettings(),
         fetchAllPredictions(),
         fetchQaBots(),
+        fetchAdminBlogPosts(),
       ])
       const settings = normalizeSiteSettings(settingsRaw)
       const tierCounts = countPlayersByTier(settings)
@@ -34,6 +38,8 @@ export function AdminDashboardPage() {
       setU21Enabled(settings.youth_u21_enabled)
       setU18Enabled(settings.youth_u18_enabled)
       setStatsEnabled(settings.stats_page_enabled)
+      setBlogEnabled(settings.blog_enabled)
+      setPublishedPosts(blogPosts.filter((p) => p.published).length)
       setVisiblePool(tierCounts.senior.visible + tierCounts.u21.visible + tierCounts.u18.visible)
       setPredictionCount(predictions.length)
       setBotCount(bots.length)
@@ -74,6 +80,12 @@ export function AdminDashboardPage() {
           variant={statsEnabled ? 'success' : 'warning'}
         />
         <AdminStatusCard
+          label="Blog"
+          value={blogEnabled ? `${publishedPosts} live` : 'Hidden'}
+          hint={blogEnabled ? 'Public /blog section' : 'Blog disabled'}
+          variant={blogEnabled ? 'success' : 'warning'}
+        />
+        <AdminStatusCard
           label="U21 pool"
           value={u21Enabled ? 'On' : 'Off'}
           hint="England U21 call-ups"
@@ -110,10 +122,16 @@ export function AdminDashboardPage() {
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
           <Link
-            to="/admin/players"
+            to="/admin/blog"
             className="rounded-lg bg-england-navy px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
           >
-            Player pool settings
+            Manage blog
+          </Link>
+          <Link
+            to="/admin/players"
+            className="rounded-lg border border-violet-300 bg-white px-4 py-2 text-sm font-semibold text-england-navy hover:bg-violet-100"
+          >
+            Player pool
           </Link>
           <Link
             to="/admin/settings"

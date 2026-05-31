@@ -6,6 +6,11 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://england-wc30-squad-builder.vercel.app/blog</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://england-wc30-squad-builder.vercel.app/stats</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>

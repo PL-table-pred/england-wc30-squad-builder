@@ -14,6 +14,9 @@ import { AdminSettingsPage } from './pages/admin/AdminSettingsPage'
 import { AdminSubmissionsPage } from './pages/admin/AdminSubmissionsPage'
 import { AdminUsersPage } from './pages/admin/AdminUsersPage'
 import { AdminPlayerPoolPage } from './pages/admin/AdminPlayerPoolPage'
+import { AdminBlogPage } from './pages/admin/AdminBlogPage'
+import { BlogListPage } from './pages/BlogListPage'
+import { BlogPostPage } from './pages/BlogPostPage'
 import { MostPickedPage } from './pages/MostPickedPage'
 import { AboutPage } from './pages/AboutPage'
 import { ContactPage } from './pages/ContactPage'
@@ -42,11 +45,14 @@ function AppRoutes() {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/blog" element={<BlogListPage />} />
+        <Route path="/blog/:slug" element={<BlogPostPage />} />
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboardPage />} />
           <Route path="reference" element={<AdminReferencePage />} />
           <Route path="settings" element={<AdminSettingsPage />} />
           <Route path="players" element={<AdminPlayerPoolPage />} />
+          <Route path="blog" element={<AdminBlogPage />} />
           <Route path="bots" element={<AdminBotsPage />} />
           <Route path="submissions" element={<AdminSubmissionsPage />} />
           <Route path="users" element={<AdminUsersPage />} />

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useSiteFeatures } from '../contexts/SiteFeaturesContext'
 
 const legalLinks = [
   { to: '/about', label: 'About' },
@@ -7,6 +8,8 @@ const legalLinks = [
 ] as const
 
 export function SiteFooter() {
+  const { settings } = useSiteFeatures()
+
   return (
     <footer className="border-t border-slate-200 bg-white">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
@@ -14,6 +17,11 @@ export function SiteFooter() {
           className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm font-semibold text-england-navy"
           aria-label="Legal and information"
         >
+          {settings.blog_enabled && (
+            <Link to="/blog" className="hover:text-england-red">
+              Blog
+            </Link>
+          )}
           {legalLinks.map(({ to, label }) => (
             <Link key={to} to={to} className="hover:text-england-red">
               {label}

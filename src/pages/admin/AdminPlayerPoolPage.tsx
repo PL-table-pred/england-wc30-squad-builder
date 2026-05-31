@@ -27,6 +27,7 @@ export function AdminPlayerPoolPage() {
   const [u21Enabled, setU21Enabled] = useState(true)
   const [u18Enabled, setU18Enabled] = useState(true)
   const [statsEnabled, setStatsEnabled] = useState(true)
+  const [blogEnabled, setBlogEnabled] = useState(true)
   const [disabledIds, setDisabledIds] = useState<Set<string>>(new Set())
   const [tierFilter, setTierFilter] = useState<PoolTier | 'all'>('all')
   const [search, setSearch] = useState('')
@@ -43,6 +44,7 @@ export function AdminPlayerPoolPage() {
     setU21Enabled(normalized.youth_u21_enabled)
     setU18Enabled(normalized.youth_u18_enabled)
     setStatsEnabled(normalized.stats_page_enabled)
+    setBlogEnabled(normalized.blog_enabled)
     setDisabledIds(new Set(normalized.disabled_player_ids))
     setLoading(false)
   }
@@ -58,9 +60,10 @@ export function AdminPlayerPoolPage() {
       youth_u21_enabled: u21Enabled,
       youth_u18_enabled: u18Enabled,
       stats_page_enabled: statsEnabled,
+      blog_enabled: blogEnabled,
       disabled_player_ids: [...disabledIds],
     }),
-    [settings, u21Enabled, u18Enabled, statsEnabled, disabledIds],
+    [settings, u21Enabled, u18Enabled, statsEnabled, blogEnabled, disabledIds],
   )
 
   const tierCounts = useMemo(() => countPlayersByTier(draftSettings), [draftSettings])
@@ -83,6 +86,7 @@ export function AdminPlayerPoolPage() {
       youthU21Enabled: u21Enabled,
       youthU18Enabled: u18Enabled,
       statsPageEnabled: statsEnabled,
+      blogEnabled,
     })
     setFeaturesBusy(false)
     if (!result.ok) {
@@ -183,6 +187,15 @@ export function AdminPlayerPoolPage() {
                 className="rounded border-slate-300 text-england-red focus:ring-england-red"
               />
               <span className="font-semibold">Most picked stats page</span> (/stats)
+            </label>
+            <label className="flex cursor-pointer items-center gap-3 text-sm text-england-navy">
+              <input
+                type="checkbox"
+                checked={blogEnabled}
+                onChange={(e) => setBlogEnabled(e.target.checked)}
+                className="rounded border-slate-300 text-england-red focus:ring-england-red"
+              />
+              <span className="font-semibold">Blog section</span> (/blog)
             </label>
             <button
               type="button"

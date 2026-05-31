@@ -42,6 +42,18 @@ export function Header() {
 
         <div className="ml-auto flex flex-wrap items-center gap-2">
         <nav className="flex items-center gap-1">
+          {siteSettings.blog_enabled && (
+            <Link
+              to="/blog"
+              className={`rounded-lg px-3 py-2 text-sm font-semibold ${
+                location.pathname.startsWith('/blog')
+                  ? 'bg-slate-100 text-england-navy'
+                  : 'text-slate-600 hover:bg-slate-50 hover:text-england-navy'
+              }`}
+            >
+              Blog
+            </Link>
+          )}
           {siteSettings.stats_page_enabled && (
             <Link
               to="/stats"

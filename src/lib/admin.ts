@@ -18,6 +18,7 @@ export interface SiteSettings {
   youth_u21_enabled: boolean
   youth_u18_enabled: boolean
   stats_page_enabled: boolean
+  blog_enabled: boolean
   disabled_player_ids: string[]
 }
 
@@ -32,6 +33,7 @@ export async function fetchContestSettings(): Promise<SiteSettings> {
       youth_u21_enabled: true,
       youth_u18_enabled: true,
       stats_page_enabled: true,
+      blog_enabled: true,
       disabled_player_ids: [],
     }
   }
@@ -44,6 +46,7 @@ export async function fetchContestSettings(): Promise<SiteSettings> {
       youth_u21_enabled: true,
       youth_u18_enabled: true,
       stats_page_enabled: true,
+      blog_enabled: true,
       disabled_player_ids: [],
     }
   }
@@ -56,6 +59,7 @@ export async function fetchContestSettings(): Promise<SiteSettings> {
     youth_u21_enabled: settings.youth_u21_enabled ?? true,
     youth_u18_enabled: settings.youth_u18_enabled ?? true,
     stats_page_enabled: settings.stats_page_enabled ?? true,
+    blog_enabled: settings.blog_enabled ?? true,
     disabled_player_ids: Array.isArray(disabled) ? disabled : [],
   }
 }
@@ -86,6 +90,7 @@ export async function setSiteFeatures(
     youthU21Enabled: boolean
     youthU18Enabled: boolean
     statsPageEnabled: boolean
+    blogEnabled: boolean
   },
   adminSecret?: string,
 ): Promise<{ ok: boolean; settings?: SiteSettings; error?: string }> {
@@ -98,6 +103,7 @@ export async function setSiteFeatures(
     p_youth_u21_enabled: features.youthU21Enabled,
     p_youth_u18_enabled: features.youthU18Enabled,
     p_stats_page_enabled: features.statsPageEnabled,
+    p_blog_enabled: features.blogEnabled,
     p_admin_secret: adminSecret ?? (getStoredAdminSecret() || null),
   })
 

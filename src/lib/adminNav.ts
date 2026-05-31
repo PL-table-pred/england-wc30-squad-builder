@@ -19,6 +19,12 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
     description: 'U21/U18 squads, hide players, and most-picked stats toggle.',
   },
   {
+    id: 'blog',
+    href: '/admin/blog',
+    title: 'Blog',
+    description: 'Write and publish articles for the public /blog section.',
+  },
+  {
     id: 'settings',
     href: '/admin/settings',
     title: 'Site & contest settings',
