@@ -60,6 +60,10 @@ export function AboutPage() {
           <Link to="/privacy" className="font-semibold text-england-red hover:underline">
             privacy policy
           </Link>
+          . Use of the site is governed by our{' '}
+          <Link to="/terms" className="font-semibold text-england-red hover:underline">
+            terms of use
+          </Link>
           .
         </p>
       </section>

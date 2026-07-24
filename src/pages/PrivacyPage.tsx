@@ -6,19 +6,27 @@ import { useContactEmail } from '../hooks/useContactEmail'
 export function PrivacyPage() {
   const contactEmail = useContactEmail()
   const origin = getSiteOrigin()
-  const lastUpdated = '30 May 2026'
+  const lastUpdated = '25 July 2026'
 
   return (
     <LegalPageLayout
       title="Privacy policy"
-      subtitle={`How we handle information on ${origin}. Last updated: ${lastUpdated}.`}
+      subtitle={`How we handle information on ${origin} (LionXI). Last updated: ${lastUpdated}.`}
     >
       <section>
         <h2>Overview</h2>
         <p>
           This policy explains what data the England WC &apos;30 Squad Builder collects, how we use it,
-          and your choices. We aim to collect only what is needed to run the app, leaderboard, and
-          optional accounts.
+          and your choices. The site is operated by TimeCapsule Football at{' '}
+          <a href={origin} className="font-semibold text-england-red hover:underline">
+            {origin}
+          </a>
+          . We aim to collect only what is needed to run the app, leaderboard, and optional accounts.
+          Use of the site is also governed by our{' '}
+          <Link to="/terms" className="font-semibold text-england-red hover:underline">
+            terms of use
+          </Link>
+          .
         </p>
       </section>
 
@@ -49,26 +57,21 @@ export function PrivacyPage() {
       </section>
 
       <section>
-        <h2>Browser storage (cookies and similar)</h2>
+        <h2>Cookies and similar technologies</h2>
+        <p>
+          We use browser storage and, where enabled, third-party cookies. This section is our cookie
+          notice for the site.
+        </p>
         <ul>
           <li>
-            <strong>localStorage:</strong> Your in-progress squad is saved under the key{' '}
-            <code className="rounded bg-slate-100 px-1 text-sm">england-wc30-squad</code> so you can
-            return without losing picks. You can clear this via &ldquo;Reset squad&rdquo; or your browser
-            settings.
+            <strong>Essential / functional:</strong> localStorage key{' '}
+            <code className="rounded bg-slate-100 px-1 text-sm">england-wc30-squad</code> keeps your
+            in-progress squad. sessionStorage deduplicates squad view counts and may hold an admin
+            unlock for the current tab only. Supabase may store auth session data so you stay signed in.
           </li>
           <li>
-            <strong>sessionStorage:</strong> Used for (1) deduplicating squad view counts per session, and
-            (2) optional admin secret unlock for this tab/session only.
-          </li>
-          <li>
-            <strong>Supabase session cookies:</strong> When logged in, Supabase may set authentication
-            cookies or local storage entries to keep you signed in, depending on configuration.
-          </li>
-          <li>
-            <strong>Advertising cookies:</strong> If we display Google AdSense or similar ads, Google and
-            its partners may set cookies or use similar technologies to serve ads, measure performance,
-            and (where enabled) personalize content. You can manage preferences at{' '}
+            <strong>Advertising (when enabled):</strong> Google AdSense or similar partners may set
+            cookies to serve and measure ads. Manage preferences at{' '}
             <a
               href="https://adssettings.google.com"
               className="font-semibold text-england-red hover:underline"
@@ -77,7 +80,8 @@ export function PrivacyPage() {
             >
               Google Ads Settings
             </a>{' '}
-            and via your browser.
+            or via your browser. A consent banner may appear in regions that require it before
+            non-essential cookies load.
           </li>
         </ul>
       </section>

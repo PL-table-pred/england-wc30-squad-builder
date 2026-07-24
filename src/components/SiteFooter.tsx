@@ -4,6 +4,7 @@ import { useSiteFeatures } from '../contexts/SiteFeaturesContext'
 const legalLinks = [
   { to: '/about', label: 'About' },
   { to: '/privacy', label: 'Privacy' },
+  { to: '/terms', label: 'Terms' },
   { to: '/contact', label: 'Contact' },
 ] as const
 

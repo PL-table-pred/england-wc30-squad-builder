@@ -84,6 +84,10 @@ export function AdminSettingsPage() {
           <Link to="/privacy" className="font-semibold text-england-red hover:underline">
             /privacy
           </Link>
+          ,{' '}
+          <Link to="/terms" className="font-semibold text-england-red hover:underline">
+            /terms
+          </Link>
           , and linked from <Link to="/about" className="font-semibold text-england-red hover:underline">/about</Link>
           . Leave blank to use{' '}
           <code className="rounded bg-slate-100 px-1 text-xs">VITE_CONTACT_EMAIL</code> or default (
