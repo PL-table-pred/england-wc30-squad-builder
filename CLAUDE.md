@@ -8,7 +8,7 @@ Use this document as the source of truth when working in this repo. Fan project 
 
 A **Vite + React** web app where users build a predicted **26-man England squad** for the **2030 FIFA World Cup**: pick players (built-in pool or custom names), choose formation, assign starting XI on a pitch, pick captain, share via URL, submit to a **community leaderboard** scored against an admin **reference squad**.
 
-**Production:** https://england-wc30-squad-builder.vercel.app  
+**Production:** https://lionxi.co  
 **GitHub:** https://github.com/PL-table-pred/england-wc30-squad-builder  
 **Supabase (dedicated):** TimeCapsule England'30 — ref `nzypoiurjqvpohqmbide`  
 **Dashboard:** https://supabase.com/dashboard/project/nzypoiurjqvpohqmbide  
@@ -39,7 +39,7 @@ Copy `.env.example` → `.env` (gitignored):
 ```env
 VITE_SUPABASE_URL=https://nzypoiurjqvpohqmbide.supabase.co
 VITE_SUPABASE_ANON_KEY=<anon key from Supabase Dashboard → Settings → API>
-VITE_APP_URL=https://england-wc30-squad-builder.vercel.app
+VITE_APP_URL=https://lionxi.co
 ```
 
 All three should be set on **Vercel production** as well. `VITE_APP_URL` drives signup email redirect to `/auth/callback`.
@@ -163,7 +163,7 @@ Max **215**. Custom players match reference when normalized names align.
 ### 1. Admin secret (no SQL, no login required)
 
 1. Get secret: `SELECT value FROM app_settings WHERE key = 'admin_secret';`
-2. Open `https://england-wc30-squad-builder.vercel.app/?admin=1`
+2. Open `https://lionxi.co/?admin=1`
 3. Enter secret in `AdminSecretGate` → sessionStorage unlock
 4. Use inline **reference squad** + **QA bots** on homepage, or `/admin` (secret gate on layout)
 

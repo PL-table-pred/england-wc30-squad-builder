@@ -4,4 +4,4 @@ Allow: /
 Disallow: /admin
 Disallow: /admin/
 
-Sitemap: https://england-wc30-squad-builder.vercel.app/sitemap.xml
+Sitemap: https://lionxi.co/sitemap.xml

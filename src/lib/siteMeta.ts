@@ -4,7 +4,7 @@ import { getAppUrl } from './appUrl'
 export function getContactEmail(): string {
   const fromEnv = import.meta.env.VITE_CONTACT_EMAIL?.trim()
   if (fromEnv) return fromEnv
-  return 'contact@englandwc30.com'
+  return 'contact@lionxi.co'
 }
 
 export function getSiteOrigin(): string {

@@ -78,7 +78,7 @@ The static output is in the `dist/` folder.
 
 ### Vercel (recommended)
 
-**Live site:** [england-wc30-squad-builder.vercel.app](https://england-wc30-squad-builder.vercel.app)
+**Live site:** [lionxi.co](https://lionxi.co)
 
 **GitHub:** [github.com/PL-table-pred/england-wc30-squad-builder](https://github.com/PL-table-pred/england-wc30-squad-builder)
 

@@ -4,7 +4,7 @@ export const config = {
   runtime: 'edge',
 }
 
-const DEFAULT_ORIGIN = 'https://england-wc30-squad-builder.vercel.app'
+const DEFAULT_ORIGIN = 'https://lionxi.co'
 
 function escapeHtml(value: string): string {
   return value

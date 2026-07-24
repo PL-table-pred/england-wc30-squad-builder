@@ -4,7 +4,7 @@ export const config = {
   runtime: 'edge',
 }
 
-const SITE = 'england-wc30-squad-builder.vercel.app'
+const SITE = 'lionxi.co'
 
 function truncate(text: string, max: number): string {
   if (text.length <= max) return text

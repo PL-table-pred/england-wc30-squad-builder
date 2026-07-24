@@ -4,8 +4,9 @@
 project_id = "nzypoiurjqvpohqmbide"
 
 [auth]
-site_url = "https://england-wc30-squad-builder.vercel.app"
+site_url = "https://lionxi.co"
 additional_redirect_urls = [
+  "https://lionxi.co/**",
   "https://england-wc30-squad-builder.vercel.app/**",
   "http://localhost:5173/**",
 ]

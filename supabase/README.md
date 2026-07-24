@@ -95,11 +95,11 @@ Local `.env` and Vercel:
 ```
 VITE_SUPABASE_URL=https://nzypoiurjqvpohqmbide.supabase.co
 VITE_SUPABASE_ANON_KEY=<anon key from Dashboard → Settings → API>
-VITE_APP_URL=https://england-wc30-squad-builder.vercel.app
+VITE_APP_URL=https://lionxi.co
 ```
 
 ## Admin (no account / SQL promote)
 
-1. Open `https://england-wc30-squad-builder.vercel.app/?admin=1`
+1. Open `https://lionxi.co/?admin=1`
 2. Admin secret (SQL Editor): `SELECT value FROM public.app_settings WHERE key = 'admin_secret';`
 3. Unlock reference squad + QA bots for the session. Full panel: `/admin` with the same secret.

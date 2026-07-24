@@ -3,8 +3,9 @@
 
 $ErrorActionPreference = 'Stop'
 $projectRef = 'nzypoiurjqvpohqmbide'
-$siteUrl = 'https://england-wc30-squad-builder.vercel.app'
+$siteUrl = 'https://lionxi.co'
 $redirectUrls = @(
+  'https://lionxi.co/**',
   'https://england-wc30-squad-builder.vercel.app/**',
   'http://localhost:5173/**'
 ) -join ','
