@@ -18,6 +18,9 @@ export function getAppUrl(): string {
   return PRODUCTION_APP_URL
 }
 
+/** Email confirmation / magic-link target — always the public production site. */
 export function getAuthCallbackUrl(): string {
-  return `${getAppUrl()}/auth/callback`
+  const fromEnv = import.meta.env.VITE_APP_URL?.trim()
+  const base = (fromEnv || PRODUCTION_APP_URL).replace(/\/$/, '')
+  return `${base}/auth/callback`
 }
