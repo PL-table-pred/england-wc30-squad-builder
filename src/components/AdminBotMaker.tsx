@@ -100,8 +100,8 @@ export function AdminBotMaker({ onBotsChanged, embedded = false }: AdminBotMaker
         <>
           <h3 className="text-lg font-bold text-england-navy">Admin — QA bots</h3>
           <p className="mt-1 text-sm text-slate-600">
-            Seed the leaderboard with realistic random squad predictions. Bots appear on the
-            community leaderboard with generated display names.
+            Seed the leaderboard with realistic random squad predictions. They appear as ordinary
+            community names publicly — only admins see this tooling.
           </p>
         </>
       )}
