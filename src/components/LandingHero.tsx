@@ -33,18 +33,31 @@ export function LandingHero({ onStart }: LandingHeroProps) {
         <div className="mt-12 grid grid-cols-3 gap-4 text-center sm:gap-8">
           <Feature number="26" label="Man squad" />
           <Feature number={formationCount} label="Formations" />
-          <Feature number={poolCount} label="Players to choose from" />
+          <Feature
+            number={poolCount}
+            label="Players to choose from"
+            note="or add your own"
+          />
         </div>
       </div>
     </section>
   )
 }
 
-function Feature({ number, label }: { number: string; label: string }) {
+function Feature({
+  number,
+  label,
+  note,
+}: {
+  number: string
+  label: string
+  note?: string
+}) {
   return (
     <div>
       <p className="text-3xl font-extrabold text-england-red">{number}</p>
       <p className="mt-1 text-sm text-slate-500">{label}</p>
+      {note ? <p className="mt-0.5 text-xs font-medium text-slate-400">{note}</p> : null}
     </div>
   )
 }
