@@ -10,7 +10,7 @@ export function CaptainPicker({ squad }: CaptainPickerProps) {
   return (
     <div className="flex flex-wrap items-center gap-2">
       <label htmlFor="captain-select" className="text-sm font-semibold text-england-navy">
-        Captain:
+        Captain
       </label>
       <select
         id="captain-select"

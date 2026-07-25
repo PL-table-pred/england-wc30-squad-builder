@@ -3,6 +3,7 @@ import { FORMATION_SLOTS, getPitchRows } from '../utils/squadRules'
 import { setDragSlot } from '../utils/pitchDrag'
 import type { UseSquadReturn } from '../hooks/useSquad'
 import { BenchDropZone } from './BenchDropZone'
+import { CaptainPicker } from './CaptainPicker'
 import { PlayerPickerModal } from './PlayerPickerModal'
 
 interface FormationPitchProps {
@@ -123,6 +124,12 @@ export function FormationPitch({ squad }: FormationPitchProps) {
               ))}
             </div>
           </div>
+
+          {squad.selectedPlayers.length > 0 && (
+            <div className="mt-4 rounded-lg border border-slate-100 bg-slate-50 px-3 py-2.5">
+              <CaptainPicker squad={squad} />
+            </div>
+          )}
 
           <div className="mt-4">
             <h3 className="mb-2 text-xs font-bold uppercase tracking-wide text-slate-400">

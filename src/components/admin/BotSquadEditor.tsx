@@ -6,7 +6,6 @@ import { useSquad } from '../../hooks/useSquad'
 import { decodeSquadFromUrl, encodeSquadToUrl } from '../../utils/shareSquad'
 import { calculateSquadScore } from '../../utils/squadScore'
 import type { QaBotRow } from '../../lib/supabase'
-import { CaptainPicker } from '../CaptainPicker'
 import { FormationPicker } from '../FormationPicker'
 import { FormationPitch } from '../FormationPitch'
 import { SelectedSquad } from '../SelectedSquad'
@@ -209,9 +208,8 @@ export function BotSquadEditor({
         </p>
       )}
 
-      <div className="space-y-3 rounded-xl border border-slate-200 bg-slate-50/80 p-4">
+      <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-4">
         <FormationPicker squad={squad} />
-        <CaptainPicker squad={squad} />
       </div>
 
       <div className="lg:hidden">

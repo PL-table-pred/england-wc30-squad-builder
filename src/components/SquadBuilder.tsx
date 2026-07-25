@@ -5,7 +5,6 @@ import type { UseSquadReturn } from '../hooks/useSquad'
 import { AdminBotMaker } from './AdminBotMaker'
 import { AdminReferenceSquad } from './AdminReferenceSquad'
 import { AdminSecretGate } from './admin/AdminSecretGate'
-import { CaptainPicker } from './CaptainPicker'
 import { FormationPicker } from './FormationPicker'
 import { FormationPitch } from './FormationPitch'
 import { SelectedSquad } from './SelectedSquad'
@@ -51,9 +50,8 @@ export function SquadBuilder({ squad }: SquadBuilderProps) {
 
   return (
     <section id="builder" className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
-      <div className="mb-6 space-y-3">
+      <div className="mb-6">
         <FormationPicker squad={squad} />
-        <CaptainPicker squad={squad} />
       </div>
 
       {needsAdminUnlock && (
