@@ -11,13 +11,15 @@ function safeRedirect(path: string | null): string {
 }
 
 export function LoginPage() {
-  const { configured, loading, user, signIn } = useAuth()
+  const { configured, loading, user, signIn, resetPasswordForEmail } = useAuth()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [info, setInfo] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
+  const [forgotMode, setForgotMode] = useState(false)
 
   const redirectTo = safeRedirect(searchParams.get('redirect'))
   const registerHref =
@@ -31,6 +33,18 @@ export function LoginPage() {
     e.preventDefault()
     setSubmitting(true)
     setError(null)
+    setInfo(null)
+
+    if (forgotMode) {
+      const result = await resetPasswordForEmail(email.trim())
+      setSubmitting(false)
+      if (result.error) {
+        setError(result.error)
+        return
+      }
+      setInfo('If an account exists for that email, a reset link is on its way. Check your inbox and spam folder.')
+      return
+    }
 
     const result = await signIn(email.trim(), password)
     setSubmitting(false)
@@ -56,14 +70,37 @@ export function LoginPage() {
 
   return (
     <AuthLayout
-      title="Log in"
-      subtitle="Sign in to save your squad predictions and track your leaderboard entries."
+      title={forgotMode ? 'Reset password' : 'Log in'}
+      subtitle={
+        forgotMode
+          ? 'We will email you a link to choose a new password.'
+          : 'Sign in to save your squad predictions and track your leaderboard entries.'
+      }
     >
       <p className="mb-4 text-sm text-slate-500">
-        No account?{' '}
-        <Link to={registerHref} className="font-semibold text-england-red hover:underline">
-          Create one
-        </Link>
+        {forgotMode ? (
+          <>
+            Remembered it?{' '}
+            <button
+              type="button"
+              onClick={() => {
+                setForgotMode(false)
+                setError(null)
+                setInfo(null)
+              }}
+              className="font-semibold text-england-red hover:underline"
+            >
+              Back to log in
+            </button>
+          </>
+        ) : (
+          <>
+            No account?{' '}
+            <Link to={registerHref} className="font-semibold text-england-red hover:underline">
+              Create one
+            </Link>
+          </>
+        )}
       </p>
 
       <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
@@ -79,21 +116,29 @@ export function LoginPage() {
           />
         </label>
 
-        <label className="block">
-          <span className="text-xs font-semibold uppercase text-slate-400">Password</span>
-          <input
-            type="password"
-            required
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-england-red focus:ring-2 focus:ring-england-red/20"
-          />
-        </label>
+        {!forgotMode && (
+          <label className="block">
+            <span className="text-xs font-semibold uppercase text-slate-400">Password</span>
+            <input
+              type="password"
+              required
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-england-red focus:ring-2 focus:ring-england-red/20"
+            />
+          </label>
+        )}
 
         {error && (
           <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
             {error}
+          </p>
+        )}
+
+        {info && (
+          <p className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
+            {info}
           </p>
         )}
 
@@ -102,9 +147,31 @@ export function LoginPage() {
           disabled={submitting || loading}
           className="w-full rounded-lg bg-england-red py-3 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-50"
         >
-          {submitting ? 'Signing in…' : 'Log in'}
+          {submitting
+            ? forgotMode
+              ? 'Sending…'
+              : 'Signing in…'
+            : forgotMode
+              ? 'Send reset link'
+              : 'Log in'}
         </button>
       </form>
+
+      {!forgotMode && (
+        <p className="mt-4 text-center text-sm text-slate-500">
+          <button
+            type="button"
+            onClick={() => {
+              setForgotMode(true)
+              setError(null)
+              setInfo(null)
+            }}
+            className="font-semibold text-england-red hover:underline"
+          >
+            Forgot password?
+          </button>
+        </p>
+      )}
     </AuthLayout>
   )
 }

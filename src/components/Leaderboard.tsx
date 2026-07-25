@@ -58,7 +58,7 @@ export function Leaderboard({ refreshKey = 0 }: LeaderboardProps) {
   }
 
   return (
-    <div id="leaderboard" className="mt-4 scroll-mt-24 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+    <div id="leaderboard" className="scroll-mt-24 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
       <div className="flex items-center justify-between gap-2">
         <div>
           <h3 className="text-lg font-bold text-england-navy">Community Leaderboard</h3>

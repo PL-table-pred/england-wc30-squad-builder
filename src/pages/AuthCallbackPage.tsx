@@ -14,24 +14,32 @@ export function AuthCallbackPage() {
     }
 
     let cancelled = false
+    let finished = false
 
-    const finish = () => {
-      if (!cancelled) {
-        navigate('/', { replace: true })
-      }
+    const finish = (path: string) => {
+      if (cancelled || finished) return
+      finished = true
+      navigate(path, { replace: true })
     }
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        finish('/reset-password')
+        return
+      }
       if (session && (event === 'SIGNED_IN' || event === 'INITIAL_SESSION')) {
-        finish()
+        finish('/')
       }
     })
 
     void (async () => {
       const params = new URLSearchParams(window.location.search)
+      const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''))
       const code = params.get('code')
+      const isRecovery =
+        params.get('type') === 'recovery' || hashParams.get('type') === 'recovery'
 
       if (code) {
         const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
@@ -41,7 +49,17 @@ export function AuthCallbackPage() {
           }
           return
         }
-        finish()
+        // Prefer recovery redirect when the link type is known; otherwise auth events decide.
+        if (isRecovery) {
+          finish('/reset-password')
+          return
+        }
+        // Give PASSWORD_RECOVERY a moment to fire before falling back to home.
+        window.setTimeout(() => {
+          if (!finished) {
+            finish('/')
+          }
+        }, 500)
         return
       }
 
@@ -58,7 +76,7 @@ export function AuthCallbackPage() {
       }
 
       if (session) {
-        finish()
+        finish(isRecovery ? '/reset-password' : '/')
         return
       }
 

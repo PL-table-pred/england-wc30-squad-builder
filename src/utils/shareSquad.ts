@@ -1,5 +1,6 @@
 import type { Formation, Player, SquadState } from '../types/player'
 import { isCustomPlayerId } from '../lib/customPlayers'
+import { isFormation } from './squadRules'
 
 export interface SharedCustomPlayer {
   i: string
@@ -42,7 +43,7 @@ export function decodeSquadFromUrl(encoded: string): SquadState | null {
   try {
     const json = decodeURIComponent(escape(atob(encoded)))
     const payload = JSON.parse(json) as SharedSquadPayload
-    if (!payload.f || !Array.isArray(payload.s)) return null
+    if (!payload.f || !Array.isArray(payload.s) || !isFormation(payload.f)) return null
 
     const customPlayers: Record<string, Player> = {}
     for (const row of payload.cp ?? []) {

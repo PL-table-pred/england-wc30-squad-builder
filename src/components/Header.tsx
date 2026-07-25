@@ -67,8 +67,12 @@ export function Header() {
             </Link>
           )}
           <Link
-            to="/#leaderboard"
-            className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50 hover:text-england-navy"
+            to="/leaderboard"
+            className={`rounded-lg px-3 py-2 text-sm font-semibold ${
+              location.pathname === '/leaderboard'
+                ? 'bg-slate-100 text-england-navy'
+                : 'text-slate-600 hover:bg-slate-50 hover:text-england-navy'
+            }`}
           >
             Leaderboard
           </Link>

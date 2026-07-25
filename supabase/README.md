@@ -86,7 +86,16 @@ $env:SUPABASE_ACCESS_TOKEN = '<from Dashboard → Account → Access Tokens>'
 # or: npx supabase login && npx supabase config push --project-ref nzypoiurjqvpohqmbide
 ```
 
-Until that runs, confirmation emails may still default to whatever Site URL is set in the dashboard. The app always sends `emailRedirectTo` to production `/auth/callback`.
+**Auth email templates** (confirm signup + reset password) live in `supabase/templates/`. Branded to match LionXI (England red / navy):
+
+```powershell
+$env:SUPABASE_ACCESS_TOKEN = '<from Dashboard → Account → Access Tokens>'
+.\scripts\push-auth-email-templates.ps1
+```
+
+Or paste the HTML into **Authentication → Email Templates** in the [dashboard](https://supabase.com/dashboard/project/nzypoiurjqvpohqmbide/auth/templates).
+
+Until auth URLs are pushed, confirmation emails may still default to whatever Site URL is set in the dashboard. The app always sends `emailRedirectTo` to production `/auth/callback`.
 
 ## App environment
 

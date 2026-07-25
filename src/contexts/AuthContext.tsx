@@ -33,6 +33,8 @@ interface AuthContextValue {
     audienceType: AudienceType
     publication?: string
   }) => Promise<{ error?: string; needsEmailConfirmation?: boolean }>
+  resetPasswordForEmail: (email: string) => Promise<{ error?: string }>
+  updatePassword: (password: string) => Promise<{ error?: string }>
   signOut: () => Promise<void>
   refreshProfile: () => Promise<void>
   updateProfileDetails: (input: {
@@ -133,8 +135,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { error: 'Authentication is not configured.' }
     }
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    const trimmedEmail = email.trim()
+    const { error } = await supabase.auth.signInWithPassword({
+      email: trimmedEmail,
+      password,
+    })
     if (error) {
+      const isInvalidCredentials =
+        error.code === 'invalid_credentials' ||
+        /invalid login credentials/i.test(error.message)
+
+      if (isInvalidCredentials) {
+        const { data: exists } = await supabase.rpc('account_exists_for_email', {
+          p_email: trimmedEmail,
+        })
+        if (exists) {
+          return { error: 'Wrong password. Try again, or use Forgot password.' }
+        }
+        return { error: 'No account found with that email. Create one to get started.' }
+      }
+
       return { error: error.message }
     }
 
@@ -179,7 +199,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       })
 
       if (error) {
+        if (/already registered|already been registered|already exists/i.test(error.message)) {
+          return {
+            error: 'You already have an account with this email. Log in instead.',
+          }
+        }
         return { error: error.message }
+      }
+
+      // Already-registered emails return a user with empty identities and no session;
+      // Supabase does not send another confirmation email in that case.
+      if (data.user && (data.user.identities?.length ?? 0) === 0) {
+        return {
+          error: 'You already have an account with this email. Log in instead.',
+        }
       }
 
       if (data.user && data.session) {
@@ -200,6 +233,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     [],
   )
+
+  const resetPasswordForEmail = useCallback(async (email: string) => {
+    const supabase = getSupabase()
+    if (!supabase) {
+      return { error: 'Authentication is not configured.' }
+    }
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+      redirectTo: getAuthCallbackUrl(),
+    })
+    if (error) {
+      return { error: error.message }
+    }
+
+    return {}
+  }, [])
+
+  const updatePassword = useCallback(async (password: string) => {
+    const supabase = getSupabase()
+    if (!supabase) {
+      return { error: 'Authentication is not configured.' }
+    }
+
+    const { error } = await supabase.auth.updateUser({ password })
+    if (error) {
+      return { error: error.message }
+    }
+
+    return {}
+  }, [])
 
   const updateProfileDetails = useCallback(
     async ({
@@ -255,6 +318,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       configured,
       signIn,
       signUp,
+      resetPasswordForEmail,
+      updatePassword,
       signOut,
       refreshProfile,
       updateProfileDetails,
@@ -270,6 +335,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       configured,
       signIn,
       signUp,
+      resetPasswordForEmail,
+      updatePassword,
       signOut,
       refreshProfile,
       updateProfileDetails,

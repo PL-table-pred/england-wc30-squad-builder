@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { FORMATION_SLOTS } from '../utils/squadRules'
+import { FORMATION_SLOTS, getPitchRows } from '../utils/squadRules'
 import { setDragSlot } from '../utils/pitchDrag'
 import type { UseSquadReturn } from '../hooks/useSquad'
 import { BenchDropZone } from './BenchDropZone'
@@ -162,19 +162,4 @@ export function FormationPitch({ squad }: FormationPitchProps) {
       />
     </>
   )
-}
-
-function getPitchRows(formation: string): string[][] {
-  switch (formation) {
-    case '4-3-3':
-      return [['gk'], ['lb', 'cb1', 'cb2', 'rb'], ['cm1', 'cm2', 'cm3'], ['lw', 'st', 'rw']]
-    case '4-2-3-1':
-      return [['gk'], ['lb', 'cb1', 'cb2', 'rb'], ['cdm1', 'cdm2'], ['lam', 'cam', 'ram'], ['st']]
-    case '3-4-3':
-      return [['gk'], ['cb1', 'cb2', 'cb3'], ['lwb', 'cm1', 'cm2', 'rwb'], ['lw', 'st', 'rw']]
-    case '4-4-2':
-      return [['gk'], ['lb', 'cb1', 'cb2', 'rb'], ['lm', 'cm1', 'cm2', 'rm'], ['st1', 'st2']]
-    default:
-      return [['gk']]
-  }
 }

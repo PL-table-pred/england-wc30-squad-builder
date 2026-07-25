@@ -8,7 +8,6 @@ import { AdminSecretGate } from './admin/AdminSecretGate'
 import { CaptainPicker } from './CaptainPicker'
 import { FormationPicker } from './FormationPicker'
 import { FormationPitch } from './FormationPitch'
-import { Leaderboard } from './Leaderboard'
 import { SelectedSquad } from './SelectedSquad'
 import { ShareBar } from './ShareBar'
 import { SquadCompare } from './SquadCompare'
@@ -22,7 +21,6 @@ interface SquadBuilderProps {
 export function SquadBuilder({ squad }: SquadBuilderProps) {
   const { isAdmin, isProfileAdmin } = useAuth()
   const [mobileTab, setMobileTab] = useState<MobileTab>('pitch')
-  const [leaderboardKey, setLeaderboardKey] = useState(0)
 
   const showAdminSection = isAdminMode() && isAdmin
   const needsAdminUnlock = isAdminMode() && !isAdmin
@@ -66,13 +64,9 @@ export function SquadBuilder({ squad }: SquadBuilderProps) {
 
       {showAdminSection && (
         <div className="mb-6 space-y-4">
-          <AdminReferenceSquad
-            squad={squad}
-            embedded
-            onPublished={() => setLeaderboardKey((k) => k + 1)}
-          />
+          <AdminReferenceSquad squad={squad} embedded />
           <div className="rounded-xl border border-violet-200 bg-violet-50 p-4 shadow-sm">
-            <AdminBotMaker embedded onBotsChanged={() => setLeaderboardKey((k) => k + 1)} />
+            <AdminBotMaker embedded />
           </div>
           {!isProfileAdmin && (
             <p className="text-center text-xs text-slate-500">
@@ -82,9 +76,8 @@ export function SquadBuilder({ squad }: SquadBuilderProps) {
         </div>
       )}
 
-      <ShareBar squad={squad} onLeaderboardSubmit={() => setLeaderboardKey((k) => k + 1)} />
+      <ShareBar squad={squad} />
       <SquadCompare squad={squad} />
-      <Leaderboard refreshKey={leaderboardKey} />
 
       <div className="mt-4 lg:hidden">
         <div className="flex rounded-lg bg-slate-100 p-1">

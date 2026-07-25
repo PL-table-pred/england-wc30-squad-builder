@@ -7,6 +7,7 @@ import { AuthCallbackPage } from './pages/AuthCallbackPage'
 import { HomePage } from './pages/HomePage'
 import { LoginPage } from './pages/LoginPage'
 import { RegisterPage } from './pages/RegisterPage'
+import { ResetPasswordPage } from './pages/ResetPasswordPage'
 import { AdminBotsPage } from './pages/admin/AdminBotsPage'
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage'
 import { AdminReferencePage } from './pages/admin/AdminReferencePage'
@@ -18,6 +19,7 @@ import { AdminBlogPage } from './pages/admin/AdminBlogPage'
 import { BlogListPage } from './pages/BlogListPage'
 import { BlogPostPage } from './pages/BlogPostPage'
 import { MostPickedPage } from './pages/MostPickedPage'
+import { LeaderboardPage } from './pages/LeaderboardPage'
 import { AboutPage } from './pages/AboutPage'
 import { ContactPage } from './pages/ContactPage'
 import { PrivacyPage } from './pages/PrivacyPage'
@@ -42,7 +44,9 @@ function AppRoutes() {
         <Route path="/auth/callback" element={<AuthCallbackPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/stats" element={<MostPickedPage />} />
+        <Route path="/leaderboard" element={<LeaderboardPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/terms" element={<TermsPage />} />

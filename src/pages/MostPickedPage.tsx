@@ -79,7 +79,7 @@ export function MostPickedPage() {
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <Link
-              to="/#leaderboard"
+              to="/leaderboard"
               className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-england-navy hover:bg-slate-50"
             >
               ← Leaderboard

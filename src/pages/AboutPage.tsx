@@ -1,10 +1,7 @@
 import { Link } from 'react-router-dom'
 import { LegalPageLayout } from '../components/LegalPageLayout'
-import { getSiteOrigin } from '../lib/siteMeta'
 
 export function AboutPage() {
-  const origin = getSiteOrigin()
-
   return (
     <LegalPageLayout
       title="About this site"
@@ -79,9 +76,9 @@ export function AboutPage() {
             Most picked stats
           </Link>
           {' · '}
-          <a href={`${origin}/#leaderboard`} className="font-semibold text-england-red hover:underline">
+          <Link to="/leaderboard" className="font-semibold text-england-red hover:underline">
             Leaderboard
-          </a>
+          </Link>
         </p>
       </section>
     </LegalPageLayout>
