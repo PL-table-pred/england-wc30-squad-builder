@@ -73,7 +73,7 @@ export function RegisterPage() {
 
     if (result.needsEmailConfirmation) {
       setInfo(
-        'Check your email to confirm your account (link opens the live site, not localhost), then log in.',
+        'Check your email to confirm your account, then log in.',
       )
       return
     }
