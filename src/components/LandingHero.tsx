@@ -1,8 +1,12 @@
+import { PLAYERS } from '../data/players'
+
 interface LandingHeroProps {
   onStart: () => void
 }
 
 export function LandingHero({ onStart }: LandingHeroProps) {
+  const poolCount = String(PLAYERS.length)
+
   return (
     <section className="relative overflow-hidden bg-white">
       <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(206,17,36,0.06)_0%,transparent_50%)]" />
@@ -17,6 +21,9 @@ export function LandingHero({ onStart }: LandingHeroProps) {
           Pick the 26 players you think will represent England at the 2030 World Cup. Choose your
           formation, set the captain, and share your prediction.
         </p>
+        <p className="mx-auto mt-3 max-w-xl text-sm text-slate-500">
+          An unofficial fan project — not affiliated with The FA or FIFA.
+        </p>
         <button
           type="button"
           onClick={onStart}
@@ -27,7 +34,7 @@ export function LandingHero({ onStart }: LandingHeroProps) {
         <div className="mt-12 grid grid-cols-3 gap-4 text-center sm:gap-8">
           <Feature number="26" label="Man squad" />
           <Feature number="4" label="Formations" />
-          <Feature number="70+" label="Players to choose from" />
+          <Feature number={poolCount} label="Players to choose from" />
         </div>
       </div>
     </section>
