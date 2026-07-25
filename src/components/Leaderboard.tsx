@@ -115,11 +115,6 @@ export function Leaderboard({ refreshKey = 0 }: LeaderboardProps) {
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold text-england-navy">
                       {row.bot_name ?? squadSummary(row.squad_param)}
-                      {row.is_bot && (
-                        <span className="ml-1.5 rounded bg-violet-100 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-violet-700">
-                          Bot
-                        </span>
-                      )}
                     </p>
                     {row.bot_name && (
                       <p className="truncate text-xs text-slate-500">{squadSummary(row.squad_param)}</p>

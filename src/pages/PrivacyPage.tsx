@@ -40,9 +40,8 @@ export function PrivacyPage() {
           </li>
           <li>
             <strong>Squad predictions:</strong> When you post to the leaderboard, we store an encoded
-            representation of your squad (`squad_param`), a timestamp, and optional bot metadata.
-            Submissions are readable by anyone with access to the public API (anon key) for leaderboard
-            and stats features.
+            representation of your squad (`squad_param`) and a timestamp. Submissions are readable by
+            anyone with access to the public API (anon key) for leaderboard and stats features.
           </li>
           <li>
             <strong>View counts:</strong> Opening a shared squad link may increment an anonymous view
@@ -50,8 +49,8 @@ export function PrivacyPage() {
           </li>
           <li>
             <strong>Admin activity:</strong> Administrators with appropriate access may manage reference
-            squads, settings, bots, and user records. Admin unlock via URL parameter stores a shared
-            secret in session storage only for that browser session.
+            squads, settings, submissions, and user records. Admin unlock via URL parameter stores a
+            shared secret in session storage only for that browser session.
           </li>
         </ul>
       </section>

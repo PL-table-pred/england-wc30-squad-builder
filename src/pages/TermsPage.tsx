@@ -69,7 +69,7 @@ export function TermsPage() {
             and share previews).
           </li>
           <li>
-            Administrators may remove submissions, bots, or accounts that break these terms or harm the
+            Administrators may remove submissions or accounts that break these terms or harm the
             community.
           </li>
         </ul>
@@ -92,7 +92,7 @@ export function TermsPage() {
         <ul>
           <li>Scrape, overload, or reverse-engineer the service in a way that harms availability</li>
           <li>Bypass security, admin gates, or rate limits</li>
-          <li>Use automated bots to spam the leaderboard (except official QA bots created by admins)</li>
+          <li>Use automation to spam or flood the leaderboard</li>
           <li>Misrepresent affiliation with FIFA, The FA, or this site&apos;s operators</li>
         </ul>
       </section>

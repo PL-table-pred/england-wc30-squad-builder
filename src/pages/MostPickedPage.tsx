@@ -18,7 +18,8 @@ export function MostPickedPage() {
   const { settings: siteSettings, loading: settingsLoading } = useSiteFeatures()
   const configured = isSupabaseConfigured()
   const [stats, setStats] = useState<PickAggregationResult | null>(null)
-  const [includeBots, setIncludeBots] = useState(false)
+  /** Admins only: optionally analyse seed accounts separately. Public always sees all submissions. */
+  const [adminExcludeSeeds, setAdminExcludeSeeds] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -30,6 +31,7 @@ export function MostPickedPage() {
     setLoading(true)
     setError(null)
     try {
+      const includeBots = !isAdmin || !adminExcludeSeeds
       const result = await fetchPickStats({ includeBots })
       if (result === null) {
         setError('Could not decode any submitted squads.')
@@ -43,7 +45,7 @@ export function MostPickedPage() {
     } finally {
       setLoading(false)
     }
-  }, [configured, includeBots])
+  }, [configured, isAdmin, adminExcludeSeeds])
 
   useEffect(() => {
     void load()
@@ -105,33 +107,31 @@ export function MostPickedPage() {
                 ) : stats ? (
                   <>
                     <span className="font-semibold text-england-navy">{total}</span> squads analysed
-                    {!includeBots && stats.botSubmissions > 0 && (
-                      <span className="text-slate-400">
-                        {' '}
-                        ({stats.botSubmissions} QA bot{stats.botSubmissions === 1 ? '' : 's'} hidden)
-                      </span>
-                    )}
                   </>
                 ) : (
                   'No submissions yet'
                 )}
               </div>
-              <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-600">
-                <input
-                  type="checkbox"
-                  checked={includeBots}
-                  onChange={(e) => setIncludeBots(e.target.checked)}
-                  className="rounded border-slate-300 text-england-red focus:ring-england-red"
-                />
-                Include QA bots
-              </label>
-              <button
-                type="button"
-                onClick={() => void load()}
-                className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-england-navy hover:bg-slate-200"
-              >
-                Refresh
-              </button>
+              <div className="flex flex-wrap items-center gap-3">
+                {isAdmin && (
+                  <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-600">
+                    <input
+                      type="checkbox"
+                      checked={adminExcludeSeeds}
+                      onChange={(e) => setAdminExcludeSeeds(e.target.checked)}
+                      className="rounded border-slate-300 text-england-red focus:ring-england-red"
+                    />
+                    Admin: exclude seed accounts
+                  </label>
+                )}
+                <button
+                  type="button"
+                  onClick={() => void load()}
+                  className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-england-navy hover:bg-slate-200"
+                >
+                  Refresh
+                </button>
+              </div>
             </div>
 
             {error && (
